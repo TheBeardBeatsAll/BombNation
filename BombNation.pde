@@ -11,7 +11,7 @@ int x_coord, y_coord;
 
 boolean[] keys = new boolean[1000];
 boolean[][] level1 = new boolean[15][15];
-Player player1 = new Player(x, y, block, block, 'w', 's', 'a', 'd');
+Player player1;
 
 void draw()
 {
@@ -59,6 +59,7 @@ void initialise()
       }//end else
     }//end for
   }//end for
+  player1 = new Player(x, y, 'w', 's', 'a', 'd');
 }//end initialise
 
 void keyPressed()

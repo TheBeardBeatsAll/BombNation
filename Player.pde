@@ -1,15 +1,12 @@
 class Player
 {
   float x, y;
-  float size_w, size_h;
   char up, down, left, right;
   
-  Player(float x, float y, float size_w, float size_h, char up, char down, char left, char right)
+  Player(float x, float y, char up, char down, char left, char right)
   {
     this.x = x;
     this.y = y;
-    this.size_w = size_w;
-    this.size_h = size_h;
     this.left = left;
     this.right = right;
     this.up = up;
@@ -18,7 +15,7 @@ class Player
    
   void render()
   {
-    if(key == 'w')
+    if(checkKey(up))
     {
       if(level1[x_coord][y_coord - 1])
       {
@@ -26,7 +23,7 @@ class Player
         y_coord -= 1;
       }//end if
     }//end if
-    if(key == 'a')
+    if(checkKey(left))
     {
       if(level1[x_coord - 1][y_coord])
       {
@@ -34,7 +31,7 @@ class Player
         x_coord -= 1;
       }//end if
     }//end if
-    if(key == 's')
+    if(checkKey(down))
     {
       if(level1[x_coord][y_coord + 1])
       {
@@ -42,7 +39,7 @@ class Player
         y_coord += 1;
       }//end if
     }//end if
-    if(key == 'd')
+    if(checkKey(right))
     {
       if(level1[x_coord + 1][y_coord])
       {
@@ -52,6 +49,6 @@ class Player
     }//end if
     fill(0, 255, 0);
     ellipseMode(CORNER);
-    ellipse(X_pos, Y_pos, block, block);
+    ellipse(x, y, block, block);
   }//end render
 }//end Player
