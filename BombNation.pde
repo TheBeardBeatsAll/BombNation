@@ -5,12 +5,13 @@ void setup()
 }//end setup
 
 float border;
-float block, block_num, half_block;
+float block, block_num;
 float x, y;
 int x_coord, y_coord;
 
+boolean[] keys = new boolean[1000];
 boolean[][] level1 = new boolean[15][15];
-Player player1 = new Player();
+Player player1 = new Player(x, y, block, block, 'w', 's', 'a', 'd');
 
 void draw()
 {
@@ -30,7 +31,7 @@ void draw()
       }//end if
     }//end for
   }//end for
-  player1.render(x, y);
+  player1.render();
 }//end draw
 
 void initialise()
@@ -38,7 +39,6 @@ void initialise()
   block_num = 15;
   border = (width - height)/2;
   block = height / block_num;
-  half_block = block / 2;
   
   x = block;
   y = block;
@@ -62,24 +62,20 @@ void initialise()
 }//end initialise
 
 void keyPressed()
-{
-  if(keyPressed)
-  {
-    if(key == 'w')
-    {
-      y -= half_block;
-    }//end if
-    if(key == 'a')
-    {
-      x -= half_block;
-    }//end if
-    if(key == 's')
-    {
-      y += half_block;
-    }//end if
-    if(key == 'd')
-    {
-      x += half_block;
-    }//end if
-  }//end if
+{ 
+  keys[keyCode] = true;
 }//end keyPressed
+ 
+void keyReleased()
+{
+  keys[keyCode] = false; 
+}//end keyReleased
+
+boolean checkKey(int k)
+{
+  if (keys.length >= k) 
+  {
+    return keys[k] || keys[Character.toUpperCase(k)];  
+  }
+  return false;
+}//end checkKey
