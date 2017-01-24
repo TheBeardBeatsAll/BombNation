@@ -1,16 +1,16 @@
 class Brick
 {
-  float x, y;
+  int x, y;
   
-  Brick(float x, float y)
+  Brick(TableRow row)
   {
-    this.x = x;
-    this.y = y;
+    this.x = row.getInt(1);
+    this.y = row.getInt(0);
   }//end Brick
   
   void render()
   {
     fill(0, 0, 255);
-    rect(x, y, block, block);
+    rect(x * block, y * block, block, block);
   }//end render
 }//end Brick

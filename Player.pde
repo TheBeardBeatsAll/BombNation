@@ -24,7 +24,7 @@ class Player
   {
     if(k == up)
     {
-      if(level1[x_coord][y_coord - 1])
+      if(level[x_coord][y_coord - 1])
       {
         y -= block;
         y_coord -= 1;
@@ -32,7 +32,7 @@ class Player
     }//end if
     else if(k == left)
     {
-      if(level1[x_coord - 1][y_coord])
+      if(level[x_coord - 1][y_coord])
       {
         x -= block;
         x_coord -= 1;
@@ -40,7 +40,7 @@ class Player
     }//end if
     else if(k == down)
     {
-      if(level1[x_coord][y_coord + 1])
+      if(level[x_coord][y_coord + 1])
       {
         y += block;
         y_coord += 1;
@@ -48,7 +48,7 @@ class Player
     }//end if
     else if(k == right)
     {
-      if(level1[x_coord + 1][y_coord])
+      if(level[x_coord + 1][y_coord])
       {
         x += block;
         x_coord += 1;
