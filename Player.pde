@@ -15,7 +15,49 @@ class Player
    
   void render()
   {
-    if(checkKey(up))
+    //if(keyPressed)
+    //{
+    //  if(key == up)
+    //  {
+    //    if(level1[x_coord][y_coord - 1])
+    //    {
+    //      y -= block;
+    //      y_coord -= 1;
+    //    }//end if
+    //  }//end if
+    //  if(key == left)
+    //  {
+    //    if(level1[x_coord - 1][y_coord])
+    //    {
+    //      x -= block;
+    //      x_coord -= 1;
+    //    }//end if
+    //  }//end if
+    //  if(key == down)
+    //  {
+    //    if(level1[x_coord][y_coord + 1])
+    //    {
+    //      y += block;
+    //      y_coord += 1;
+    //    }//end if
+    //  }//end if
+    //  if(key == right)
+    //  {
+    //    if(level1[x_coord + 1][y_coord])
+    //    {
+    //      x += block;
+    //      x_coord += 1;
+    //    }//end if
+    //  }//end if
+    //}//end if
+    fill(0, 255, 0);
+    ellipseMode(CORNER);
+    ellipse(x, y, block, block);
+  }//end render
+  
+  void update(char k)
+  {
+    if(k == up)
     {
       if(level1[x_coord][y_coord - 1])
       {
@@ -23,7 +65,7 @@ class Player
         y_coord -= 1;
       }//end if
     }//end if
-    if(checkKey(left))
+    else if(k == left)
     {
       if(level1[x_coord - 1][y_coord])
       {
@@ -31,7 +73,7 @@ class Player
         x_coord -= 1;
       }//end if
     }//end if
-    if(checkKey(down))
+    else if(k == down)
     {
       if(level1[x_coord][y_coord + 1])
       {
@@ -39,7 +81,7 @@ class Player
         y_coord += 1;
       }//end if
     }//end if
-    if(checkKey(right))
+    else if(k == right)
     {
       if(level1[x_coord + 1][y_coord])
       {
@@ -47,8 +89,5 @@ class Player
         x_coord += 1;
       }//end if
     }//end if
-    fill(0, 255, 0);
-    ellipseMode(CORNER);
-    ellipse(x, y, block, block);
-  }//end render
+  }//end update
 }//end Player

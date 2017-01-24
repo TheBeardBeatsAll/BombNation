@@ -63,20 +63,6 @@ void initialise()
 }//end initialise
 
 void keyPressed()
-{ 
-  keys[keyCode] = true;
+{
+  player1.update(key);
 }//end keyPressed
- 
-void keyReleased()
-{
-  keys[keyCode] = false; 
-}//end keyReleased
-
-boolean checkKey(int k)
-{
-  if (keys.length >= k) 
-  {
-    return keys[k] || keys[Character.toUpperCase(k)];  
-  }
-  return false;
-}//end checkKey
