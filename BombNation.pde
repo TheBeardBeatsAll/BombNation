@@ -29,6 +29,11 @@ void draw()
         fill(150);
         rect(0 + (i * block), 0 + (j * block), block, block);
       }//end if
+      else if(level1[i][j] == false)
+      {
+        fill(255, 0, 0);
+        rect(0 + (i * block), 0 + (j * block), block, block);
+      }//end else if
     }//end for
   }//end for
   player1.render();
