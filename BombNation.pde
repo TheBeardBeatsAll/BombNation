@@ -20,7 +20,6 @@ void initialise()
 {
    bricks.clear();
   
-  //load in all the data from the csv files
   t = loadTable("brickone.csv", "csv");
   for(TableRow row : t.rows())
   {
@@ -46,10 +45,6 @@ void initialise()
       {
         level[i][j] = false;
       }//end if
-      //else if()
-      //{
-        
-      //}//end else if
       else
       {
         level[i][j] = true;

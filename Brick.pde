@@ -13,4 +13,9 @@ class Brick
     fill(0, 0, 255);
     rect(x * block, y * block, block, block);
   }//end render
+  
+  void destroy()
+  {
+    
+  }//end destroy
 }//end Brick
