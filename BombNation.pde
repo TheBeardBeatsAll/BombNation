@@ -8,9 +8,11 @@ float border;
 float block, block_num;
 float x, y;
 int x_coord, y_coord;
-int bomb_count;
+int bomb_count, max_bomb;
 
-boolean bomb;
+float[] timer_b = new float[5];
+
+boolean bomb, check_b;
 boolean[][] level = new boolean[15][15];
 
 Table t;
@@ -21,7 +23,7 @@ ArrayList<Bomb> bombs = new ArrayList<Bomb>();
 
 void initialise()
 {
-   bricks.clear();
+  bricks.clear();
   
   t = loadTable("brickone.csv", "csv");
   for(TableRow row : t.rows())
@@ -36,6 +38,7 @@ void initialise()
   
   bomb = true;
   bomb_count = 1;
+  max_bomb = 5;
   x = block;
   y = block;
   
@@ -62,7 +65,7 @@ void initialise()
     level[b.x][b.y] = false;
   }//end for
   
-  player = new Player(x, y, 'w', 's', 'a', 'd');
+  player = new Player(x, y, 'w', 's', 'a', 'd', 'c');
 }//end initialise
 
 void draw()
@@ -98,13 +101,15 @@ void draw()
 
 void keyPressed()
 {
-  if(key == 'c')
+  check_b = player.update(key);
+  if(check_b)
   {
     if(bomb)
     {
       Bomb bm = new Bomb(x_coord, y_coord);
       bombs.add(bm);
       bomb_count--;
+      timer_b[bomb_count] = millis();
       level[x_coord][y_coord] = false;
       if(bomb_count == 0)
       {
@@ -112,5 +117,4 @@ void keyPressed()
       }//end if
     }//end if
   }//end if
-  player.update(key);
 }//end keyPressed

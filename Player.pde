@@ -1,9 +1,9 @@
 class Player
 {
   float x, y;
-  char up, down, left, right;
+  char up, down, left, right, bomb;
   
-  Player(float x, float y, char up, char down, char left, char right)
+  Player(float x, float y, char up, char down, char left, char right, char bomb)
   {
     this.x = x;
     this.y = y;
@@ -11,6 +11,7 @@ class Player
     this.right = right;
     this.up = up;
     this.down = down;
+    this.bomb = bomb;
   }//end constructor
    
   void render()
@@ -20,7 +21,7 @@ class Player
     ellipse(x, y, block, block);
   }//end render
   
-  void update(char k)
+  boolean update(char k)
   {
     if(k == up)
     {
@@ -54,5 +55,10 @@ class Player
         x_coord += 1;
       }//end if
     }//end if
+    else if(k == bomb)
+    {
+      return true;
+    }//end if
+    return false;
   }//end update
 }//end Player
