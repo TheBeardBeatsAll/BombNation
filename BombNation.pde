@@ -96,6 +96,11 @@ void draw()
   {
     Bomb bm = bombs.get(i);
     bm.render();
+    //float time = ((millis() - timer_b[bomb_count]) / 1000);
+    //if(time > 3)
+    //{
+      
+    //}//end if
   }
 }//end draw
 

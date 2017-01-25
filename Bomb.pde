@@ -21,11 +21,5 @@ class Bomb
       fill(255, 0, 255);
       triangle(x * block, y * block,(x + 1) * block, y * block, (x + 0.5) * block, (y + 1) * block);
     }//end else if
-    else if( time > 3)
-    {
-      bomb_count++;
-      //bomb = true;
-      //return;
-    }//end else if
   }//end render
 }//end Bomb
