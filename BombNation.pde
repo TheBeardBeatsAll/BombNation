@@ -8,13 +8,16 @@ float border;
 float block, block_num;
 float x, y;
 int x_coord, y_coord;
+int bomb_count;
 
+boolean bomb;
 boolean[][] level = new boolean[15][15];
 
 Table t;
 
 Player player;
 ArrayList<Brick> bricks = new ArrayList<Brick>();
+ArrayList<Bomb> bombs = new ArrayList<Bomb>();
 
 void initialise()
 {
@@ -31,6 +34,8 @@ void initialise()
   border = (width - height)/2;
   block = height / block_num;
   
+  bomb = true;
+  bomb_count = 1;
   x = block;
   y = block;
   
@@ -84,9 +89,28 @@ void draw()
     b.render();
   }//end for
   player.render();
+  for(int i = 0; i < bombs.size(); i++)
+  {
+    Bomb bm = bombs.get(i);
+    bm.render();
+  }
 }//end draw
 
 void keyPressed()
 {
+  if(key == 'c')
+  {
+    if(bomb)
+    {
+      Bomb bm = new Bomb(x_coord, y_coord);
+      bombs.add(bm);
+      bomb_count--;
+      level[x_coord][y_coord] = false;
+      if(bomb_count == 0)
+      {
+        bomb = false;
+      }//end if
+    }//end if
+  }//end if
   player.update(key);
 }//end keyPressed
