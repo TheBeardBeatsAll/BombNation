@@ -1,12 +1,9 @@
 class Player
 {
-  float x, y;
   char up, down, left, right, bomb;
   
-  Player(float x, float y, char up, char down, char left, char right, char bomb)
+  Player(char up, char down, char left, char right, char bomb)
   {
-    this.x = x;
-    this.y = y;
     this.left = left;
     this.right = right;
     this.up = up;
@@ -14,11 +11,11 @@ class Player
     this.bomb = bomb;
   }//end constructor
    
-  void render()
+  void render(int x, int y)
   {
     fill(0, 255, 0);
     ellipseMode(CORNER);
-    ellipse(x, y, block, block);
+    ellipse(x * block, y * block, block, block);
   }//end render
   
   boolean update(char k)
@@ -27,7 +24,6 @@ class Player
     {
       if(level[player_x][player_y - 1])
       {
-        y -= block;
         player_y -= 1;
       }//end if
     }//end if
@@ -35,7 +31,6 @@ class Player
     {
       if(level[player_x - 1][player_y])
       {
-        x -= block;
         player_x -= 1;
       }//end if
     }//end if
@@ -43,7 +38,6 @@ class Player
     {
       if(level[player_x][player_y + 1])
       {
-        y += block;
         player_y += 1;
       }//end if
     }//end if
@@ -51,7 +45,6 @@ class Player
     {
       if(level[player_x + 1][player_y])
       {
-        x += block;
         player_x += 1;
       }//end if
     }//end if

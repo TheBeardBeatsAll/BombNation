@@ -12,7 +12,6 @@ class Bomb
   
   boolean render()
   {
-    //bomb_data[k][2]
     float time = ((millis() - t) / 1000); 
     if(time < 0.5 || (time >= 1 && time < 1.5) || (time >= 2 && time < 2.5))
     {
@@ -45,9 +44,16 @@ class Bomb
   {
     for(int i = 1; i < bomb_power; i++)
     {
-      if(level[x + (l * i)][y + (k * i)])
+      if(!level[x + (l * i)][y + (k * i)])
       {
-        rect((x + (l * i)) * block, (y + (k * i)) * block, block, block);
+        break;
+      }//end if
+      rect((x + (l * i)) * block, (y + (k * i)) * block, block, block);
+      if(player_x == (x + (l * i)) && player_y == (y + (k * i)))
+      {
+        player_x = 1;
+        player_y = 1;
+        player_lives -= 1;
       }//end if
     }//end for
   }//end explosion
