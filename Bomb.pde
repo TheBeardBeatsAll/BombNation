@@ -1,16 +1,19 @@
 class Bomb
 {
   int x, y;
+  float t;
   
-  Bomb(int x, int y)
+  Bomb(int x, int y, float t)
   {
     this.x = x;
     this.y = y;
+    this.t = t;
   }//end Bomb
   
   boolean render()
   {
-    float time = ((millis() - timer_b) / 1000); 
+    //bomb_data[k][2]
+    float time = ((millis() - t) / 1000); 
     if(time < 0.5 || (time >= 1 && time < 1.5) || (time >= 2 && time < 2.5))
     {
       fill(255, 0, 0);
@@ -23,6 +26,8 @@ class Bomb
     }//end else if
     else
     {
+      bomb_count++;
+      level[x][y] = true;
       return true;
     }//end if
     return false;
