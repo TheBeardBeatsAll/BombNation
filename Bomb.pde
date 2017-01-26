@@ -8,9 +8,9 @@ class Bomb
     this.y = y;
   }//end Bomb
   
-  void render()
+  boolean render()
   {
-    float time = ((millis() - timer_b[bomb_count]) / 1000); 
+    float time = ((millis() - timer_b) / 1000); 
     if(time < 0.5 || (time >= 1 && time < 1.5) || (time >= 2 && time < 2.5))
     {
       fill(255, 0, 0);
@@ -21,5 +21,10 @@ class Bomb
       fill(255, 0, 255);
       triangle(x * block, y * block,(x + 1) * block, y * block, (x + 0.5) * block, (y + 1) * block);
     }//end else if
+    else
+    {
+      return true;
+    }//end if
+    return false;
   }//end render
 }//end Bomb

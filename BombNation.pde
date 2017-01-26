@@ -7,12 +7,12 @@ void setup()
 float border;
 float block, block_num;
 float x, y;
-int x_coord, y_coord;
-int bomb_count, max_bomb;
+int player_x, player_y;
+int bomb_count, max_bomb, x_pos, y_pos;
 
-float[] timer_b = new float[5];
+float timer_b;
 
-boolean bomb, check_b;
+boolean check_b;
 boolean[][] level = new boolean[15][15];
 
 Table t;
@@ -36,14 +36,13 @@ void initialise()
   border = (width - height)/2;
   block = height / block_num;
   
-  bomb = true;
   bomb_count = 1;
   max_bomb = 5;
   x = block;
   y = block;
   
-  x_coord = 1;
-  y_coord = 1;
+  player_x = 1;
+  player_y = 1;
                   
   for(int i = 0; i < 15 ; i++)
   {
@@ -95,13 +94,13 @@ void draw()
   for(int i = 0; i < bombs.size(); i++)
   {
     Bomb bm = bombs.get(i);
-    bm.render();
-    //float time = ((millis() - timer_b[bomb_count]) / 1000);
-    //if(time > 3)
-    //{
-      
-    //}//end if
-  }
+    if(bm.render())
+    {
+      bomb_count++;
+      level[x_pos][y_pos] = true;
+      bombs.remove(bm);
+    }//end if
+  }//end for
 }//end draw
 
 void keyPressed()
@@ -109,17 +108,15 @@ void keyPressed()
   check_b = player.update(key);
   if(check_b)
   {
-    if(bomb)
+    if(bomb_count > 0)
     {
-      Bomb bm = new Bomb(x_coord, y_coord);
+      Bomb bm = new Bomb(player_x, player_y);
       bombs.add(bm);
+      x_pos = player_x;
+      y_pos = player_y;
       bomb_count--;
-      timer_b[bomb_count] = millis();
-      level[x_coord][y_coord] = false;
-      if(bomb_count == 0)
-      {
-        bomb = false;
-      }//end if
+      timer_b = millis();
+      level[x_pos][y_pos] = false;
     }//end if
   }//end if
 }//end keyPressed

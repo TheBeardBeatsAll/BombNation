@@ -25,34 +25,34 @@ class Player
   {
     if(k == up)
     {
-      if(level[x_coord][y_coord - 1])
+      if(level[player_x][player_y - 1])
       {
         y -= block;
-        y_coord -= 1;
+        player_y -= 1;
       }//end if
     }//end if
     else if(k == left)
     {
-      if(level[x_coord - 1][y_coord])
+      if(level[player_x - 1][player_y])
       {
         x -= block;
-        x_coord -= 1;
+        player_x -= 1;
       }//end if
     }//end if
     else if(k == down)
     {
-      if(level[x_coord][y_coord + 1])
+      if(level[player_x][player_y + 1])
       {
         y += block;
-        y_coord += 1;
+        player_y += 1;
       }//end if
     }//end if
     else if(k == right)
     {
-      if(level[x_coord + 1][y_coord])
+      if(level[player_x + 1][player_y])
       {
         x += block;
-        x_coord += 1;
+        player_x += 1;
       }//end if
     }//end if
     else if(k == bomb)
