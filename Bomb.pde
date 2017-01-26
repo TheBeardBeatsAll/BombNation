@@ -43,6 +43,12 @@ class Bomb
   
   void explosion(int l, int k)
   {
-    rect((x + l) * block, (y + k) * block, block, block);
+    for(int i = 1; i < bomb_power; i++)
+    {
+      if(level[x + (l * i)][y + (k * i)])
+      {
+        rect((x + (l * i)) * block, (y + (k * i)) * block, block, block);
+      }//end if
+    }//end for
   }//end explosion
 }//end Bomb

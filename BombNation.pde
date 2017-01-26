@@ -39,7 +39,7 @@ void initialise()
   border = (width - height)/2;
   block = height / block_num;
   
-  bomb_power = 3;
+  bomb_power = 2;
   bomb_count = 1;
   max_bomb = 5;
   
