@@ -6,15 +6,14 @@ void setup()
 
 float border;
 float block, block_num;
-float x, y;
 int player_x, player_y;
-int bomb_count, max_bomb, x_pos, y_pos;
+int bomb_count, max_bomb, bomb_power;
 
-float timer_b;
+//float timer_b;
 //each row corresponds to a single bomb with max bombs = 5
 //1st coloumn holds x_coord in the grid of the bomb, 2nd holds y_coord
 //and 3rd holds timer data for the bomb
-float[][] bomb_data = new float[5][3];
+//float[][] bomb_data = new float[5][3];
 
 boolean check_b;
 boolean[][] level = new boolean[15][15];
@@ -40,10 +39,9 @@ void initialise()
   border = (width - height)/2;
   block = height / block_num;
   
-  bomb_count = 2;
+  bomb_power = 3;
+  bomb_count = 1;
   max_bomb = 5;
-  x = block;
-  y = block;
   
   player_x = 1;
   player_y = 1;
@@ -68,7 +66,7 @@ void initialise()
     level[b.x][b.y] = false;
   }//end for
   
-  player = new Player(x, y, 'w', 's', 'a', 'd', 'c');
+  player = new Player(block, block, 'w', 's', 'a', 'd', 'c');
 }//end initialise
 
 void draw()
