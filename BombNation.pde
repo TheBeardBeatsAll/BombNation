@@ -9,6 +9,8 @@ float block, block_num;
 int player_x, player_y, player_lives;
 int bomb_count, max_bomb, bomb_power;
 
+int brick_x, brick_y;
+
 boolean check_b;
 boolean[][] level = new boolean[15][15];
 
@@ -37,9 +39,10 @@ void initialise()
   bomb_count = 2;
   max_bomb = 5;
   
+  brick_x = brick_y = 0;
+  
   player_lives = 5;
-  player_x = 1;
-  player_y = 1;
+  player_x = player_y = 1;
                   
   for(int i = 0; i < 15 ; i++)
   {
@@ -60,7 +63,7 @@ void initialise()
     Brick b = bricks.get(i);
     level[b.x][b.y] = false;
   }//end for
-  
+ 
   player = new Player('w', 's', 'a', 'd', 'c');
 }//end initialise
 
@@ -86,6 +89,13 @@ void draw()
   {
     Brick b = bricks.get(i);
     b.render();
+
+    if(b.x == brick_x && b.y == brick_y)
+    {
+      level[b.x][b.y] = true;
+      bricks.remove(i);
+      brick_x = brick_y = 0;
+    }//end if
   }//end for
   player.render(player_x, player_y);
   for(int i = 0; i < bombs.size(); i++)
@@ -95,7 +105,7 @@ void draw()
     {
       bombs.remove(bm);
     }//end if
-  }//end for
+  }//for
 }//end draw
 
 void keyPressed()

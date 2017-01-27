@@ -46,10 +46,13 @@ class Bomb
     {
       if(!level[x + (l * i)][y + (k * i)])
       {
-        break;
+        brick_x = x + (l * i);
+        brick_y = y + (k * i);
+        return;
       }//end if
       rect((x + (l * i)) * block, (y + (k * i)) * block, block, block);
-      if(player_x == (x + (l * i)) && player_y == (y + (k * i)))
+      if((player_x == (x + (l * i)) && player_y == (y + (k * i))) ||
+      (player_x == x && player_y == y))
       {
         player_x = 1;
         player_y = 1;
