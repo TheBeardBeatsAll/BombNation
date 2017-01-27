@@ -27,10 +27,10 @@ class Bomb
     {
       fill(255, 125, 0);
       rect(x * block, y * block, block, block);
-      explosion(1, 0);
       explosion(-1, 0);
-      explosion(0, 1);
       explosion(0, -1);
+      explosion(1, 0);
+      explosion(0, 1);
     }//end if
     else
     {
@@ -54,8 +54,7 @@ class Bomb
       if((player_x == (x + (l * i)) && player_y == (y + (k * i))) ||
       (player_x == x && player_y == y))
       {
-        player_x = 1;
-        player_y = 1;
+        player_x = player_y = 1;
         player_lives -= 1;
       }//end if
     }//end for

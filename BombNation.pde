@@ -93,6 +93,14 @@ void draw()
       }//end if
     }//end for
   }//end for
+  for(int i = 0; i < bombs.size(); i++)
+  {
+    Bomb bm = bombs.get(i);
+    if(bm.render())
+    {
+      bombs.remove(bm);
+    }//end if
+  }//for
   for (int i = 0; i < bricks.size(); i++)
   {
     Brick b = bricks.get(i);
@@ -113,16 +121,12 @@ void draw()
   {
     Enemy e = enemies.get(i);
     e.render();
-  }//end for
-    
-  for(int i = 0; i < bombs.size(); i++)
-  {
-    Bomb bm = bombs.get(i);
-    if(bm.render())
+    if(player_x == e.x && player_y == e.y)
     {
-      bombs.remove(bm);
+      player_lives--;
+      player_x = player_y = 1;
     }//end if
-  }//for
+  }//end for
 }//end draw
 
 void keyPressed()
