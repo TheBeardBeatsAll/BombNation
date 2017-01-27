@@ -4,7 +4,7 @@ void setup()
   initialise();
 }//end setup
 
-float border;
+float border, bomb_timer;
 float block, block_num;
 int player_x, player_y, player_lives;
 int bomb_count, max_bomb, bomb_power;
@@ -19,6 +19,7 @@ Table t;
 Player player;
 ArrayList<Brick> bricks = new ArrayList<Brick>();
 ArrayList<Bomb> bombs = new ArrayList<Bomb>();
+ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 
 void initialise()
 {
@@ -29,6 +30,13 @@ void initialise()
   {
     Brick b = new Brick(row);
     bricks.add(b);
+  }//end for
+  
+  t = loadTable("enemyone.csv", "csv");
+  for(TableRow row : t.rows())
+  {
+    Enemy e = new Enemy(row);
+    enemies.add(e);
   }//end for
   
   block_num = 15;
@@ -89,15 +97,24 @@ void draw()
   {
     Brick b = bricks.get(i);
     b.render();
-
+    
     if(b.x == brick_x && b.y == brick_y)
     {
+      println("delete");
       level[b.x][b.y] = true;
       bricks.remove(i);
       brick_x = brick_y = 0;
     }//end if
   }//end for
+  
   player.render(player_x, player_y);
+  
+  for (int i = 0; i < enemies.size(); i++)
+  {
+    Enemy e = enemies.get(i);
+    e.render();
+  }//end for
+    
   for(int i = 0; i < bombs.size(); i++)
   {
     Bomb bm = bombs.get(i);
@@ -113,7 +130,8 @@ void keyPressed()
   check_b = player.update(key);
   if(check_b == true && bomb_count > 0)
   {
-    Bomb bm = new Bomb(player_x, player_y, millis());
+    bomb_timer = millis();
+    Bomb bm = new Bomb(player_x, player_y, bomb_timer);
     bombs.add(bm);
     bomb_count--;
     level[player_x][player_y] = false;
