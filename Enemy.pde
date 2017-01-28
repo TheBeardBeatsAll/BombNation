@@ -16,10 +16,23 @@ class Enemy
   {
     if(lives > 0)
     {
-      float time = millis() - level_timer;
       fill(0, 255, 125);
       ellipseMode(CORNER);
       ellipse(x * block, y * block, block, block);
     }//end if
   }//end render
+  
+  void update()
+  {
+    if(level[x + x_dir][y] == false && x_dir != 0)
+    {
+      x_dir = -x_dir;
+    }//end if
+    if(level[x][y + y_dir] == false && y_dir != 0)
+    {
+      y_dir = -y_dir;
+    }//end if
+    x += x_dir;
+    y += y_dir;
+  }//end update
 }//end Enemy

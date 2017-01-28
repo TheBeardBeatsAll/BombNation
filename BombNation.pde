@@ -4,7 +4,8 @@ void setup()
   initialise();
 }//end setup
 
-float border, bomb_timer, level_timer;
+float border, bomb_timer;
+float[] level_timer = new float[10];
 float block, block_num;
 int player_x, player_y, player_lives;
 int bomb_count, max_bomb, bomb_power;
@@ -96,7 +97,10 @@ void draw()
   
   if(start_level)
   {
-    level_timer = millis();
+    for(int i = 0; i < 10; i++)
+    {
+      level_timer[i] = millis();
+    }//end ofr
     start_level = false;
   }//end if
   for(int i = 0; i < bombs.size(); i++)
@@ -126,6 +130,11 @@ void draw()
   {
     Enemy e = enemies.get(i);
     e.render();
+    if((millis() - level_timer[i]) >= 1000)
+    {
+      e.update();
+      level_timer[i] = millis();
+    }//end if
     if(player_x == e.x && player_y == e.y)
     {
       player_lives--;
