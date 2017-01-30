@@ -4,8 +4,8 @@ class Brick
   
   Brick(TableRow row)
   {
-    this.x = row.getInt(1);
-    this.y = row.getInt(0);
+    this.x = row.getInt(0);
+    this.y = row.getInt(1);
   }//end Brick
   
   void render()

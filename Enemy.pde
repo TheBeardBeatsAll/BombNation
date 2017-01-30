@@ -5,8 +5,8 @@ class Enemy
   
   Enemy(TableRow row)
   {
-    this.x = row.getInt(1);
-    this.y = row.getInt(0);
+    this.x = row.getInt(0);
+    this.y = row.getInt(1);
     this.lives = row.getInt(2);
     this.x_dir = row.getInt(3);
     this.y_dir = row.getInt(4);

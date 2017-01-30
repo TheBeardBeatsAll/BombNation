@@ -7,10 +7,10 @@ void setup()
 float border, bomb_timer;
 float[] level_timer = new float[10];
 float block, block_num;
+
 int player_x, player_y, player_lives;
 int bomb_count, max_bomb, bomb_power;
-
-int brick_x, brick_y;
+int brick_x, brick_y, level_count;
 
 boolean check_b, start_level;
 boolean[][] level = new boolean[15][15];
@@ -24,16 +24,17 @@ ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 
 void initialise()
 {
+  level_count = 1;
   bricks.clear();
   
-  t = loadTable("brickone.csv", "csv");
+  t = loadTable("brick" + level_count + ".csv", "csv");
   for(TableRow row : t.rows())
   {
     Brick b = new Brick(row);
     bricks.add(b);
   }//end for
   
-  t = loadTable("enemyone.csv", "csv");
+  t = loadTable("enemy" + level_count + ".csv", "csv");
   for(TableRow row : t.rows())
   {
     Enemy e = new Enemy(row);
@@ -130,11 +131,11 @@ void draw()
   {
     Enemy e = enemies.get(i);
     e.render();
-    if((millis() - level_timer[i]) >= 1000)
-    {
-      e.update();
-      level_timer[i] = millis();
-    }//end if
+    //if((millis() - level_timer[i]) >= 1000)
+    //{
+    //  e.update();
+    //  level_timer[i] = millis();
+    //}//end if
     if(player_x == e.x && player_y == e.y)
     {
       player_lives--;
