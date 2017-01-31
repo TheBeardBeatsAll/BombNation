@@ -11,8 +11,9 @@ float block, block_num;
 int player_x, player_y, player_lives;
 int bomb_count, max_bomb, bomb_power;
 int brick_x, brick_y, level_count;
+int portal_x, portal_y;
 
-boolean check_b, start_level;
+boolean check_b, start_level, loader;
 boolean[][] level = new boolean[15][15];
 
 Table t;
@@ -25,21 +26,6 @@ ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 void initialise()
 {
   level_count = 1;
-  bricks.clear();
-  
-  t = loadTable("brick" + level_count + ".csv", "csv");
-  for(TableRow row : t.rows())
-  {
-    Brick b = new Brick(row);
-    bricks.add(b);
-  }//end for
-  
-  t = loadTable("enemy" + level_count + ".csv", "csv");
-  for(TableRow row : t.rows())
-  {
-    Enemy e = new Enemy(row);
-    enemies.add(e);
-  }//end for
   
   block_num = 15;
   border = (width - height)/2;
@@ -48,8 +34,11 @@ void initialise()
   bomb_power = 2;
   bomb_count = 2;
   max_bomb = 5;
-  start_level = true;
+  start_level = loader = true;
   brick_x = brick_y = 0;
+  
+  portal_x = 2;
+  portal_y = 1;
   
   player_lives = 5;
   player_x = player_y = 1;
@@ -84,6 +73,32 @@ void draw()
   translate(border, 0);
   rect(0, 0, height, height);
   
+  switch(level_count)
+  {
+    case 0:
+    {
+      break;
+    }//end case
+    case 1:
+    {
+      level_load();
+      break;
+    }//end case
+    case 2:
+    {
+      level_load();
+      break;
+    }//end case
+    case 3:
+    {
+      level_load();
+      break;
+    }//end case
+    case 4:
+    {
+      break;
+    }//end case
+  }//end switch
   for(int i = 0; i < 15 ; i++)
   {
     for(int j = 0; j < 15; j++)
@@ -131,18 +146,55 @@ void draw()
   {
     Enemy e = enemies.get(i);
     e.render();
-    //if((millis() - level_timer[i]) >= 1000)
-    //{
-    //  e.update();
-    //  level_timer[i] = millis();
-    //}//end if
+    if((millis() - level_timer[i]) >= 1000)
+    {
+      e.update();
+      level_timer[i] = millis();
+    }//end if
     if(player_x == e.x && player_y == e.y)
     {
       player_lives--;
       player_x = player_y = 1;
     }//end if
   }//end for
+  drawPortal();
+  
 }//end draw
+
+void level_load()
+{
+  bricks.clear();
+  enemies.clear();
+  
+  t = loadTable("brick" + level_count + ".csv", "csv");
+  for(TableRow row : t.rows())
+  {
+    Brick b = new Brick(row);
+    bricks.add(b);
+  }//end for
+  
+  t = loadTable("enemy" + level_count + ".csv", "csv");
+  for(TableRow row : t.rows())
+  {
+    Enemy e = new Enemy(row);
+    enemies.add(e);
+  }//end for
+  loader = false;
+}//end level_load
+
+void drawPortal()
+{
+  fill(255, 255, 0);
+  rect(portal_x * block, portal_y * block, block, block);
+  
+  if(player_x == portal_x && player_y == portal_y)
+  {
+    level_count++;
+    player_x = 1;
+    player_y = 1;
+    loader = true;
+  }//end if
+}//end drawPortal
 
 void keyPressed()
 {
