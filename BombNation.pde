@@ -72,10 +72,12 @@ void draw()
     }//end case
     case 4:
     {
+      text("YOU WIN", height/2, height/2);
       break;
     }//end case
     case 5:
     {
+      text("GAME OVER", height/2, height/2);
       break;
     }//end case
   }//end switch
@@ -94,7 +96,23 @@ void level()
   drawLevel();
   drawPortal();
   player.render(player_x, player_y);
+  checkPlayer();
 }//end level
+
+void checkPlayer()
+{
+  if(player_lives == 0)
+  {
+    level_count = 5;
+  }//end if
+  
+  if(player_x == portal_x && player_y == portal_y)
+  {
+    level_count++;
+    player_x = player_y = 1;
+    loader = true;
+  }//end if
+}//end checkPlayer
 
 void drawLevel()
 {
@@ -198,13 +216,6 @@ void drawPortal()
 {
   fill(255, 255, 0);
   rect(portal_x * block, portal_y * block, block, block);
-  
-  if(player_x == portal_x && player_y == portal_y)
-  {
-    level_count++;
-    player_x = player_y = 1;
-    loader = true;
-  }//end if
 }//end drawPortal
 
 void keyPressed()
