@@ -5,7 +5,7 @@ void setup()
 }//end setup
 
 float border, bomb_timer;
-float[] level_timer = new float[10];
+float[] enemy_timer = new float[10];
 float block, block_num;
 
 int player_x, player_y, player_lives;
@@ -37,41 +37,17 @@ void initialise()
   start_level = loader = true;
   brick_x = brick_y = 0;
   
-  portal_x = 2;
-  portal_y = 1;
+  portal_x = 1;
+  portal_y = 2;
   
   player_lives = 5;
   player_x = player_y = 1;
-                  
-  for(int i = 0; i < 15 ; i++)
-  {
-    for(int j = 0; j < 15; j++)
-    {
-      if( i == 0 || i == 14 || j == 0 || j == 14 || ( i % 2 == 0 && j % 2 == 0))
-      {
-        level[i][j] = false;
-      }//end if
-      else
-      {
-        level[i][j] = true;
-      }//end else
-    }//end for
-  }//end for
-  for (int i = 0; i < bricks.size(); i++)
-  {
-    Brick b = bricks.get(i);
-    level[b.x][b.y] = false;
-  }//end for
- 
   player = new Player('w', 's', 'a', 'd', 'c');
 }//end initialise
 
 void draw()
 {
   background(0);
-  fill(255);
-  translate(border, 0);
-  rect(0, 0, height, height);
   
   switch(level_count)
   {
@@ -81,24 +57,47 @@ void draw()
     }//end case
     case 1:
     {
-      level_load();
+      level();
       break;
     }//end case
     case 2:
     {
-      level_load();
+      level();
       break;
     }//end case
     case 3:
     {
-      level_load();
+      level();
       break;
     }//end case
     case 4:
     {
       break;
     }//end case
+    case 5:
+    {
+      break;
+    }//end case
   }//end switch
+}//end draw
+
+void level()
+{
+  background(0);
+  translate(border, 0);
+  fill(255);
+  rect(0, 0, height, height);
+  if(loader)
+  {
+    level_load();
+  }//end if
+  drawLevel();
+  drawPortal();
+  player.render(player_x, player_y);
+}//end level
+
+void drawLevel()
+{
   for(int i = 0; i < 15 ; i++)
   {
     for(int j = 0; j < 15; j++)
@@ -115,10 +114,11 @@ void draw()
   {
     for(int i = 0; i < 10; i++)
     {
-      level_timer[i] = millis();
+      enemy_timer[i] = millis();
     }//end ofr
     start_level = false;
   }//end if
+  
   for(int i = 0; i < bombs.size(); i++)
   {
     Bomb bm = bombs.get(i);
@@ -140,16 +140,14 @@ void draw()
     }//end if
   }//end for
   
-  player.render(player_x, player_y);
-  
   for (int i = 0; i < enemies.size(); i++)
   {
     Enemy e = enemies.get(i);
     e.render();
-    if((millis() - level_timer[i]) >= 1000)
+    if((millis() - enemy_timer[i]) >= 1000)
     {
       e.update();
-      level_timer[i] = millis();
+      enemy_timer[i] = millis();
     }//end if
     if(player_x == e.x && player_y == e.y)
     {
@@ -157,19 +155,33 @@ void draw()
       player_x = player_y = 1;
     }//end if
   }//end for
-  drawPortal();
-  
-}//end draw
+}//end drawLevel
 
 void level_load()
 {
   bricks.clear();
   enemies.clear();
   
+  for(int i = 0; i < 15 ; i++)
+  {
+    for(int j = 0; j < 15; j++)
+    {
+      if( i == 0 || i == 14 || j == 0 || j == 14 || ( i % 2 == 0 && j % 2 == 0))
+      {
+        level[i][j] = false;
+      }//end if
+      else
+      {
+        level[i][j] = true;
+      }//end else
+    }//end for
+  }//end for
+  
   t = loadTable("brick" + level_count + ".csv", "csv");
   for(TableRow row : t.rows())
   {
     Brick b = new Brick(row);
+    level[b.x][b.y] = false;
     bricks.add(b);
   }//end for
   
@@ -190,8 +202,7 @@ void drawPortal()
   if(player_x == portal_x && player_y == portal_y)
   {
     level_count++;
-    player_x = 1;
-    player_y = 1;
+    player_x = player_y = 1;
     loader = true;
   }//end if
 }//end drawPortal
