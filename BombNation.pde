@@ -54,13 +54,8 @@ void draw()
   {
     case 1:
     {
-      fill(200);
-      rect(border/2, border/4, width - border, height/2, 50);
-      fill(0);
-      rect((border * 11)/ 20, (border * 3)/8, width - (border * 11)/10, height/2 - border/4, 50);
-      fill(200);
+      textBox(0, 0);
       textSize(140);
-      textAlign(CENTER, CENTER);
       text("BombNation", width/2, height/4 + border/8);
       menu();
       break;
@@ -72,13 +67,8 @@ void draw()
     }//end case
     case 3:
     {
-      fill(200);
-      rect(border, border/2, width - (border * 2), height/2 - border/3, 50);
-      fill(0);
-      rect((border * 21)/ 20, (border * 4)/6, width - (border * 21)/10, height/2 - (border * 2)/3, 50);
-      fill(200);
+      textBox(border/2, border/3);
       textSize(40);
-      textAlign(CENTER, CENTER);
       text("Press Enter to exit", width/2, height/4 + border/4);
       menu();
       break;
@@ -108,12 +98,20 @@ void draw()
         }//end case
         case 4:
         {
-          text("YOU WIN", height/2, height/2);
+          textBox(border/8, 0);
+          textSize(30);
+          text("Congratulations you won\nYour Score is " + player_score
+          + "\nYour time is y\nYou have " + player_lives + " lives remaining"
+          + "\nPress any key to return to main menu", width/2, height/3);
           break;
         }//end case
         case 5:
         {
-          text("GAME OVER", height/2, height/2);
+          textBox(border/8, 0);
+          textSize(30);
+          text("GAME OVER\nYour Score is " + player_score
+          + "\nYour time is y\nPress any key to return to main menu", width/2, height/3);
+          //Game Over
           break;
         }//end case
       }//end switch
@@ -121,6 +119,16 @@ void draw()
     }//end case
   }//end switch
 }//end draw
+
+void textBox(float o, float p)
+{
+  fill(200);
+  rect(border/2 + o, border/4 + p, width - (border + (2 * o)), height/2 - p, 50);
+  fill(0);
+  rect((border * 11)/ 20 + o, (border * 3)/8 + p, width - ((border * 11)/10  + (2 * o)), height/2 - (border/4 + p), 50);
+  fill(200);
+  textAlign(CENTER, CENTER);
+}//end textBox
 
 void menu()
 {
@@ -272,7 +280,13 @@ void drawPortal()
 
 void keyPressed()
 {
-  if(key == ENTER)
+  if(menu_choice == 4 && ( level_count == 4 || level_count == 5))
+  {
+    menu_choice = 1;
+    level_count = 1;
+    player_lives = 5;
+  }//end if
+  else if(key == ENTER)
   {
     if(menu_choice == 3)
     {
@@ -283,14 +297,14 @@ void keyPressed()
       menu_choice = 4;
     }//end if
   }//end if
-  if(menu_choice > 1 && menu_choice <= 3)
+  else if(menu_choice > 1 && menu_choice <= 3)
   {
     if(key == 'w')
     {
       menu_choice--;
     }//end if
   }//end if
-  if(menu_choice >= 1 && menu_choice < 3)
+  else if(menu_choice >= 1 && menu_choice < 3)
   {
     if(key == 's')
     {
