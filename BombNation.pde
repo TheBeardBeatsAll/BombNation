@@ -280,48 +280,45 @@ void drawPortal()
 
 void keyPressed()
 {
-  if(menu_choice == 4 && ( level_count == 4 || level_count == 5))
+  println(menu_choice, level_count);
+  if(menu_choice >= 1 && menu_choice <= 3)
   {
-    menu_choice = 1;
-    level_count = 1;
-    player_lives = 5;
-  }//end if
-  else if(key == ENTER)
-  {
-    if(menu_choice == 3)
-    {
-      exit();
-    }//end if
-    if(menu_choice == 1)
-    {
-      menu_choice = 4;
-    }//end if
-  }//end if
-  else if(menu_choice > 1 && menu_choice <= 3)
-  {
-    if(key == 'w')
+    if(key == 'w' && menu_choice > 1)
     {
       menu_choice--;
     }//end if
-  }//end if
-  else if(menu_choice >= 1 && menu_choice < 3)
-  {
-    if(key == 's')
+    else if(key == 's' && menu_choice < 3)
     {
       menu_choice++;
-    }//end if
-  }//end if
-  
-  if(level_count >= 1 && level_count <= 3)
-  {
-    check_b = player.update(key);
-    if(check_b == true && bomb_count > 0)
+    }//end else if
+    else if(key == ENTER && menu_choice == 3)
     {
-      bomb_timer = millis();
-      Bomb bm = new Bomb(player_x, player_y, bomb_timer);
-      bombs.add(bm);
-      bomb_count--;
-      level[player_x][player_y] = false;
-    }//end if
+      exit();
+    }//end else if
+    else if(key == ENTER && menu_choice == 1)
+    {
+      menu_choice = 4;
+    }//end else if
   }//end if
+  else if(menu_choice == 4)
+  {
+    if(level_count >= 1 && level_count <= 3)
+    {
+      check_b = player.update(key);
+      if(check_b == true && bomb_count > 0)
+      {
+        bomb_timer = millis();
+        Bomb bm = new Bomb(player_x, player_y, bomb_timer);
+        bombs.add(bm);
+        bomb_count--;
+        level[player_x][player_y] = false;
+      }//end if
+    }//end if
+    else if( level_count == 4 || level_count == 5)
+    {
+      menu_choice = 1;
+      level_count = 1;
+      player_lives = 5;
+    }//end else if
+  }//end else if
 }//end keyPressed
