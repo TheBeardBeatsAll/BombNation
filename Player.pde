@@ -11,7 +11,7 @@ abstract class Player
     this.bomb = bomb;
   }//end constructor
  
-  abstract void render(int x, int y);
+  abstract void render(float x, float y, float size);
 
   abstract void ability();
 

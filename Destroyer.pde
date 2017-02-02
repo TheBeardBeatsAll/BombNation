@@ -5,11 +5,11 @@ class Destroyer extends Player
     super(up, down, left, right, bomb);
   }//end constructor
    
-  void render(int x, int y)
+  void render(float x, float y, float size)
   {
     fill(0, 255, 255);
     ellipseMode(CORNER);
-    ellipse(x * block, y * block, block, block);
+    ellipse(x * block, y * block, block * size, block * size);
   }//end render
   
   void ability()

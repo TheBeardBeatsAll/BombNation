@@ -10,7 +10,7 @@ float block, block_num;
 
 int player_x, player_y, player_lives;
 int bomb_count, max_bomb, bomb_power;
-int brick_x, brick_y, level_count;
+int brick_x, brick_y, level_count, robot_choice;
 int portal_x, portal_y, menu_choice, player_score;
 
 boolean check_b, start_level, loader;
@@ -18,14 +18,14 @@ boolean[][] level = new boolean[15][15];
 
 Table t;
 
-Kicker player;
+Player player;
 ArrayList<Brick> bricks = new ArrayList<Brick>();
 ArrayList<Bomb> bombs = new ArrayList<Bomb>();
 ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 
 void initialise()
 {
-  level_count = 1;
+  level_count = 0;
   
   block_num = 15;
   border = (width - height)/2;
@@ -42,9 +42,10 @@ void initialise()
   portal_x = 1;
   portal_y = 2;
   
+  robot_choice = 0;
   player_lives = 5;
   player_x = player_y = 1;
-  player = new Kicker('w', 's', 'a', 'd', 'c');
+  //player = new Kicker('w', 's', 'a', 'd', 'c');
 }//end initialise
 
 void draw()
@@ -79,6 +80,28 @@ void draw()
       {
         case 0:
         {
+          textBox(0, -border/8);
+          textSize(30);
+          text("Choose a Robot Class:", width/2, height/7);
+          player = new Kicker('w', 's', 'a', 'd', 'c');
+          player.render(player_x + 3, player_y + 3, 3);
+          player = new Blocker('w', 's', 'a', 'd', 'c');
+          player.render(player_x + 9.5, player_y + 3, 3);
+          player = new Destroyer('w', 's', 'a', 'd', 'c');
+          player.render(player_x + 16, player_y + 3, 3);
+          fill(200);
+          textSize(24);
+          textAlign(LEFT, CENTER);
+          text("Kicker", border * 5/6, border * 7/12);
+          text("Blocker", border * 23/12, border * 7/12);
+          text("Destroyer", border * 3, border * 7/12);
+          textSize(12);
+          //text("Can", border * 5/6, border * 7/12);
+          //text("Blocker", border * 23/12, border * 7/12);
+          //text("Destroyer", border * 3, border * 7/12);
+          triangle((border * 5.1/6) + (robot_choice * border * 1.11), border * 1.35, 
+          (border * 5.6/6) + (robot_choice * border * 1.11), border * 1.25, 
+          (border * 6.1/6) + (robot_choice * border * 1.11), border * 1.35);
           break;
         }//end case
         case 1:
@@ -155,7 +178,7 @@ void level()
   }//end if
   drawLevel();
   drawPortal();
-  player.render(player_x, player_y);
+  player.render(player_x, player_y, 1);
   checkPlayer();
 }//end level
 
@@ -197,7 +220,7 @@ void drawLevel()
     start_level = false;
   }//end if
   
-  for(int i = 0; i < bombs.size(); i++)
+  for(int i = bombs.size() - 1; i >= 0; i--)
   {
     Bomb bm = bombs.get(i);
     if(bm.render())
@@ -205,7 +228,7 @@ void drawLevel()
       bombs.remove(bm);
     }//end if
   }//for
-  for (int i = 0; i < bricks.size(); i++)
+  for (int i = bricks.size() - 1; i >= 0; i--)
   {
     Brick b = bricks.get(i);
     b.render();
@@ -218,7 +241,7 @@ void drawLevel()
     }//end if
   }//end for
   
-  for (int i = 0; i < enemies.size(); i++)
+  for (int i = enemies.size() - 1; i >= 0; i--)
   {
     Enemy e = enemies.get(i);
     e.render();
@@ -280,7 +303,6 @@ void drawPortal()
 
 void keyPressed()
 {
-  println(menu_choice, level_count);
   if(menu_choice >= 1 && menu_choice <= 3)
   {
     if(key == 'w' && menu_choice > 1)
@@ -302,7 +324,42 @@ void keyPressed()
   }//end if
   else if(menu_choice == 4)
   {
-    if(level_count >= 1 && level_count <= 3)
+    if(level_count == 0)
+    {
+      if(key == 'a' && robot_choice > 0)
+      {
+        robot_choice--;
+      }//end if
+      else if(key == 'd' && robot_choice < 2)
+      {
+        robot_choice++;
+      }//end else if
+      else if(key == ENTER)
+      {
+        switch(robot_choice)
+        {
+          case 0:
+          {
+            player = new Kicker('w', 's', 'a', 'd', 'c');
+            level_count++;
+            break;
+          }//end case
+          case 1:
+          {
+            player = new Blocker('w', 's', 'a', 'd', 'c');
+            level_count++;
+            break;
+          }//end case
+          case 2:
+          {
+            player = new Destroyer('w', 's', 'a', 'd', 'c');
+            level_count++;
+            break;
+          }//end case
+        }//end switch
+      }//end else if
+    }//end if
+    else if(level_count >= 1 && level_count <= 3)
     {
       check_b = player.update(key);
       if(check_b == true && bomb_count > 0)
@@ -313,11 +370,11 @@ void keyPressed()
         bomb_count--;
         level[player_x][player_y] = false;
       }//end if
-    }//end if
+    }//end else if
     else if( level_count == 4 || level_count == 5)
     {
       menu_choice = 1;
-      level_count = 1;
+      level_count = 0;
       player_lives = 5;
     }//end else if
   }//end else if
