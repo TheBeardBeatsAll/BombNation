@@ -49,7 +49,6 @@ void initialise()
 void draw()
 {
   background(0);
-  
   switch(menu_choice)
   {
     case 0:
@@ -90,6 +89,14 @@ void draw()
     }//end case
     case 1:
     {
+      fill(200);
+      rect(border/2, border/4, width - border, height/2, 50);
+      fill(0);
+      rect((border * 11)/ 20, (border * 3)/8, width - (border * 11)/10, height/2 - border/4, 50);
+      fill(200);
+      textSize(140);
+      textAlign(CENTER, CENTER);
+      text("BombNation", width/2, height/4 + border/8);
       menu();
       break;
     }//end case
@@ -108,7 +115,15 @@ void draw()
 
 void menu()
 {
-  
+  fill(200);
+  triangle(width/2 - (block * 2), (height * 5)/8 + (menu_choice * block), 
+  width/2 - (block * 2), (height * 5)/8 + (block * 1/3) + (menu_choice * block), 
+  width/2 - (block * 1.5), (height * 5)/8 + (block/6) + (menu_choice * block));
+  textSize(32);
+  textAlign(LEFT, CENTER);
+  text("Start Game", width/2 - block, (height * 5)/8 + block);
+  text("Instructions", width/2 - block, (height * 5)/8 + (block * 2));
+  text("Exit Game", width/2 - block, (height * 5)/8 + (block * 3));
 }//end menu
 
 void level()
@@ -248,13 +263,38 @@ void drawPortal()
 
 void keyPressed()
 {
-  check_b = player.update(key);
-  if(check_b == true && bomb_count > 0)
+  if(menu_choice == 3)
   {
-    bomb_timer = millis();
-    Bomb bm = new Bomb(player_x, player_y, bomb_timer);
-    bombs.add(bm);
-    bomb_count--;
-    level[player_x][player_y] = false;
+    if(key == ENTER)
+    {
+      exit();
+    }//end if
+  }//end if
+  if(menu_choice > 1 && menu_choice <= 3)
+  {
+    if(key == 'w')
+    {
+      menu_choice--;
+    }//end if
+  }//end if
+  if(menu_choice >= 1 && menu_choice < 3)
+  {
+    if(key == 's')
+    {
+      menu_choice++;
+    }//end if
+  }//end if
+  
+  if(level_count >= 1 && level_count <= 3)
+  {
+    check_b = player.update(key);
+    if(check_b == true && bomb_count > 0)
+    {
+      bomb_timer = millis();
+      Bomb bm = new Bomb(player_x, player_y, bomb_timer);
+      bombs.add(bm);
+      bomb_count--;
+      level[player_x][player_y] = false;
+    }//end if
   }//end if
 }//end keyPressed
