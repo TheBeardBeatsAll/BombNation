@@ -1,20 +1,24 @@
-abstract class Player
-{ 
+class Destroyer extends Player
+{
   char up, down, left, right, bomb;
   
-  Player(char up, char down, char left, char right, char bomb)
+  Destroyer(char up, char down, char left, char right, char bomb)
   {
+    super(up, down, left, right, bomb);
     this.left = left;
     this.right = right;
     this.up = up;
     this.down = down;
     this.bomb = bomb;
   }//end constructor
- 
-  abstract void render(int x, int y);
-
-  abstract void ability();
-
+   
+  void render(int x, int y)
+  {
+    fill(0, 255, 0);
+    ellipseMode(CORNER);
+    ellipse(x * block, y * block, block, block);
+  }//end render
+  
   boolean update(char k)
   {
     if(k == up)

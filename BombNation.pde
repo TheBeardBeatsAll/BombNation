@@ -18,7 +18,7 @@ boolean[][] level = new boolean[15][15];
 
 Table t;
 
-Player player;
+Kicker player;
 ArrayList<Brick> bricks = new ArrayList<Brick>();
 ArrayList<Bomb> bombs = new ArrayList<Bomb>();
 ArrayList<Enemy> enemies = new ArrayList<Enemy>();
@@ -44,7 +44,7 @@ void initialise()
   
   player_lives = 5;
   player_x = player_y = 1;
-  player = new Player('w', 's', 'a', 'd', 'c');
+  player = new Kicker('w', 's', 'a', 'd', 'c');
 }//end initialise
 
 void draw()
