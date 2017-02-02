@@ -11,7 +11,7 @@ float block, block_num;
 int player_x, player_y, player_lives;
 int bomb_count, max_bomb, bomb_power;
 int brick_x, brick_y, level_count;
-int portal_x, portal_y;
+int portal_x, portal_y, menu_choice;
 
 boolean check_b, start_level, loader;
 boolean[][] level = new boolean[15][15];
@@ -37,6 +37,7 @@ void initialise()
   start_level = loader = true;
   brick_x = brick_y = 0;
   
+  menu_choice = 1;
   portal_x = 1;
   portal_y = 2;
   
@@ -49,39 +50,66 @@ void draw()
 {
   background(0);
   
-  switch(level_count)
+  switch(menu_choice)
   {
     case 0:
     {
+      switch(level_count)
+      {
+        case 0:
+        {
+          break;
+        }//end case
+        case 1:
+        {
+          level();
+          break;
+        }//end case
+        case 2:
+        {
+          level();
+          break;
+        }//end case
+        case 3:
+        {
+          level();
+          break;
+        }//end case
+        case 4:
+        {
+          text("YOU WIN", height/2, height/2);
+          break;
+        }//end case
+        case 5:
+        {
+          text("GAME OVER", height/2, height/2);
+          break;
+        }//end case
+      }//end switch
       break;
     }//end case
     case 1:
     {
-      level();
+      menu();
       break;
     }//end case
     case 2:
     {
-      level();
+      menu();
       break;
     }//end case
     case 3:
     {
-      level();
-      break;
-    }//end case
-    case 4:
-    {
-      text("YOU WIN", height/2, height/2);
-      break;
-    }//end case
-    case 5:
-    {
-      text("GAME OVER", height/2, height/2);
+      menu();
       break;
     }//end case
   }//end switch
 }//end draw
+
+void menu()
+{
+  
+}//end menu
 
 void level()
 {
