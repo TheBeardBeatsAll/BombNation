@@ -11,7 +11,7 @@ float block, block_num;
 int player_x, player_y, player_lives;
 int bomb_count, max_bomb, bomb_power;
 int brick_x, brick_y, level_count;
-int portal_x, portal_y, menu_choice;
+int portal_x, portal_y, menu_choice, player_score;
 
 boolean check_b, start_level, loader;
 boolean[][] level = new boolean[15][15];
@@ -37,6 +37,7 @@ void initialise()
   start_level = loader = true;
   brick_x = brick_y = 0;
   
+  player_score = 0;
   menu_choice = 1;
   portal_x = 1;
   portal_y = 2;
@@ -51,7 +52,38 @@ void draw()
   background(0);
   switch(menu_choice)
   {
-    case 0:
+    case 1:
+    {
+      fill(200);
+      rect(border/2, border/4, width - border, height/2, 50);
+      fill(0);
+      rect((border * 11)/ 20, (border * 3)/8, width - (border * 11)/10, height/2 - border/4, 50);
+      fill(200);
+      textSize(140);
+      textAlign(CENTER, CENTER);
+      text("BombNation", width/2, height/4 + border/8);
+      menu();
+      break;
+    }//end case
+    case 2:
+    {
+      menu();
+      break;
+    }//end case
+    case 3:
+    {
+      fill(200);
+      rect(border, border/2, width - (border * 2), height/2 - border/3, 50);
+      fill(0);
+      rect((border * 21)/ 20, (border * 4)/6, width - (border * 21)/10, height/2 - (border * 2)/3, 50);
+      fill(200);
+      textSize(40);
+      textAlign(CENTER, CENTER);
+      text("Press Enter to exit", width/2, height/4 + border/4);
+      menu();
+      break;
+    }//end case
+    case 4:
     {
       switch(level_count)
       {
@@ -87,29 +119,6 @@ void draw()
       }//end switch
       break;
     }//end case
-    case 1:
-    {
-      fill(200);
-      rect(border/2, border/4, width - border, height/2, 50);
-      fill(0);
-      rect((border * 11)/ 20, (border * 3)/8, width - (border * 11)/10, height/2 - border/4, 50);
-      fill(200);
-      textSize(140);
-      textAlign(CENTER, CENTER);
-      text("BombNation", width/2, height/4 + border/8);
-      menu();
-      break;
-    }//end case
-    case 2:
-    {
-      menu();
-      break;
-    }//end case
-    case 3:
-    {
-      menu();
-      break;
-    }//end case
   }//end switch
 }//end draw
 
@@ -119,7 +128,7 @@ void menu()
   triangle(width/2 - (block * 2), (height * 5)/8 + (menu_choice * block), 
   width/2 - (block * 2), (height * 5)/8 + (block * 1/3) + (menu_choice * block), 
   width/2 - (block * 1.5), (height * 5)/8 + (block/6) + (menu_choice * block));
-  textSize(32);
+  textSize(36);
   textAlign(LEFT, CENTER);
   text("Start Game", width/2 - block, (height * 5)/8 + block);
   text("Instructions", width/2 - block, (height * 5)/8 + (block * 2));
@@ -263,11 +272,15 @@ void drawPortal()
 
 void keyPressed()
 {
-  if(menu_choice == 3)
+  if(key == ENTER)
   {
-    if(key == ENTER)
+    if(menu_choice == 3)
     {
       exit();
+    }//end if
+    if(menu_choice == 1)
+    {
+      menu_choice = 4;
     }//end if
   }//end if
   if(menu_choice > 1 && menu_choice <= 3)
