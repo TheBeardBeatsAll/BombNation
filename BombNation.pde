@@ -45,7 +45,6 @@ void initialise()
   robot_choice = 0;
   player_lives = 5;
   player_x = player_y = 1;
-  //player = new Kicker('w', 's', 'a', 'd', 'c');
 }//end initialise
 
 void draw()
@@ -85,12 +84,12 @@ void draw()
           textBox(0, -border/8);
           textSize(30);
           text("Choose a Robot Class:", width/2, height/7);
-          player = new Kicker('w', 's', 'a', 'd', 'c');
-          player.render(player_x + 3, player_y + 3, 3);
-          player = new Blocker('w', 's', 'a', 'd', 'c');
-          player.render(player_x + 9.5, player_y + 3, 3);
-          player = new Destroyer('w', 's', 'a', 'd', 'c');
-          player.render(player_x + 16, player_y + 3, 3);
+          player = new Kicker('w', 's', 'a', 'd', 'c', 'K', #0DBC20);
+          player.render(player_x + 3, player_y + 3, 2);
+          player = new Blocker('w', 's', 'a', 'd', 'c', 'B', #0064FF);
+          player.render(player_x + 9.5, player_y + 3, 2);
+          player = new Destroyer('w', 's', 'a', 'd', 'c', 'D', #D80726);
+          player.render(player_x + 16, player_y + 3, 2);
           fill(200);
           textSize(24);
           textAlign(LEFT, CENTER);
@@ -180,7 +179,7 @@ void level()
   }//end if
   drawLevel();
   drawPortal();
-  player.render(player_x, player_y, 1);
+  player.render(player_x, player_y, 0);
   checkPlayer();
 }//end level
 
@@ -350,19 +349,19 @@ void keyPressed()
         {
           case 0:
           {
-            player = new Kicker('w', 's', 'a', 'd', 'c');
+            player = new Kicker('w', 's', 'a', 'd', 'c', 'K', #0DBC20);
             level_count++;
             break;
           }//end case
           case 1:
           {
-            player = new Blocker('w', 's', 'a', 'd', 'c');
+            player = new Blocker('w', 's', 'a', 'd', 'c', 'B', #0064FF);
             level_count++;
             break;
           }//end case
           case 2:
           {
-            player = new Destroyer('w', 's', 'a', 'd', 'c');
+            player = new Destroyer('w', 's', 'a', 'd', 'c', 'D', #D80726);
             level_count++;
             break;
           }//end case

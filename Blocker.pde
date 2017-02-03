@@ -1,17 +1,10 @@
 class Blocker extends Player
 {
-  Blocker(char up, char down, char left, char right, char bomb)
+  Blocker(char up, char down, char left, char right, char bomb, char initial, color body)
   {
-    super(up, down, left, right, bomb);
+    super(up, down, left, right, bomb, initial, body);
   }//end constructor
    
-  void render(float x, float y, float size)
-  {
-    fill(255, 255, 0);
-    ellipseMode(CORNER);
-    ellipse(x * block, y * block, block * size, block * size);
-  }//end render
-  
   void ability()
   {
     
