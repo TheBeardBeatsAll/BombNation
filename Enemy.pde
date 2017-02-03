@@ -1,7 +1,7 @@
 class Enemy
 {
   int x, y, lives;
-  int x_dir, y_dir;
+  int x_dir, y_dir, type, score;
   
   Enemy(TableRow row)
   {
@@ -10,6 +10,8 @@ class Enemy
     this.lives = row.getInt(2);
     this.x_dir = row.getInt(3);
     this.y_dir = row.getInt(4);
+    this.type = row.getInt(5);
+    this.score = row.getInt(6);
   }//end Brick
   
   void render()

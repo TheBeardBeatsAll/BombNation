@@ -58,6 +58,8 @@ void draw()
       textBox(0, 0);
       textSize(140);
       text("BombNation", width/2, height/4 + border/8);
+      textSize(40);
+      text("Press Enter to play", width/2, height/4 + border/2);
       menu();
       break;
     }//end case
@@ -70,7 +72,7 @@ void draw()
     {
       textBox(border/2, border/3);
       textSize(40);
-      text("Press Enter to exit", width/2, height/4 + border/4);
+      text("Press Enter to exit", width/2, height/4 + border * 3/8);
       menu();
       break;
     }//end case
@@ -290,6 +292,14 @@ void level_load()
   for(TableRow row : t.rows())
   {
     Enemy e = new Enemy(row);
+    if(e.type == 2)
+    {
+      e = new Tough(row);
+    }//end if
+    else if(e.type == 3)
+    {
+      e = new Smart(row);
+    }//end else if
     enemies.add(e);
   }//end for
   loader = false;
