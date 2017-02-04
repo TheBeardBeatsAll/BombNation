@@ -55,7 +55,7 @@ class Bomb
       (player_x == x && player_y == y))
       {
         player_x = player_y = 1;
-        player_lives -= 1;
+        player_lives--;
       }//end if
     }//end for
   }//end explosion

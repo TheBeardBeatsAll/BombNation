@@ -171,7 +171,7 @@ void level()
 {
   background(0);
   translate(border, 0);
-  fill(255);
+  fill(#59BCAE);
   rect(0, 0, height, height);
   if(loader)
   {
@@ -194,7 +194,7 @@ void checkPlayer()
   {
     level_count++;
     player_x = player_y = 1;
-    loader = true;
+    loader = start_level = true;
   }//end if
 }//end checkPlayer
 
@@ -206,9 +206,24 @@ void drawLevel()
     {
       if( i == 0 || i == 14 || j == 0 || j == 14 || ( i % 2 == 0 && j % 2 == 0))
       {
+        stroke(0);
         fill(150);
         rect(0 + (i * block), 0 + (j * block), block, block);
+        fill(255);
+        rect(0 + (i * block) + (block/6), 0 + (j * block) + (block/6), block - (block/3), block - (block/3));
+        fill(50);
+        rect(0 + (i * block) + (block/3), 0 + (j * block) + (block/3), block - (block * 2/3), block - (block * 2/3));
       }//end if
+      else
+      {
+        fill(#278945);
+        stroke(#278945);
+        rect(0 + (i * block) + (block * 7/16), 0 + (j * block)  + (block * 7/16), block/8, block/8);
+        rect(0 + (i * block) + (block * 7/16), 0 + (j * block)  + (block/8), block/8, block * 3/16);
+        rect(0 + (i * block) + (block * 7/16), 0 + (j * block)  + (block * 11/16), block/8, block * 3/16);
+        rect(0 + (i * block) + (block/8), 0 + (j * block)  + (block * 7/16), block * 3/16, block/8);
+        rect(0 + (i * block) + (block * 11/16), 0 + (j * block)  + (block * 7/16), block * 3/16, block/8);
+      }//end else
     }//end for
   }//end for
   
@@ -306,8 +321,10 @@ void level_load()
 
 void drawPortal()
 {
-  fill(255, 255, 0);
+  fill(0);
   rect(portal_x * block, portal_y * block, block, block);
+  fill(#091DE8);
+  rect(portal_x * block + block/6, portal_y * block + block/6, block - block/3, block - block/3);
 }//end drawPortal
 
 void keyPressed()
