@@ -10,7 +10,7 @@ class Bomb
     this.t = t;
   }//end Bomb
   
-  boolean render()
+  boolean render(int i)
   {
     float time = ((millis() - t) / 1000); 
     if(time < 0.5 || (time >= 1 && time < 1.5) || (time >= 2 && time < 2.5))
@@ -27,36 +27,14 @@ class Bomb
     {
       fill(255, 125, 0);
       rect(x * block, y * block, block, block);
-      explosion(-1, 0);
-      explosion(0, -1);
-      explosion(1, 0);
-      explosion(0, 1);
+      explode[i] = true;
     }//end if
     else
     {
+      explode[i] = false;
       bomb_count++;
       return level[x][y] = true;
     }//end else
     return false;
-  }//end render
-  
-  void explosion(int l, int k)
-  {
-    for(int i = 1; i < bomb_power; i++)
-    {
-      if(!level[x + (l * i)][y + (k * i)])
-      {
-        brick_x = x + (l * i);
-        brick_y = y + (k * i);
-        return;
-      }//end if
-      rect((x + (l * i)) * block, (y + (k * i)) * block, block, block);
-      if((player_x == (x + (l * i)) && player_y == (y + (k * i))) ||
-      (player_x == x && player_y == y))
-      {
-        player_x = player_y = 1;
-        player_lives--;
-      }//end if
-    }//end for
-  }//end explosion
+  }//end render 
 }//end Bomb

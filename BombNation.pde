@@ -14,6 +14,7 @@ int brick_x, brick_y, level_count, robot_choice;
 int portal_x, portal_y, menu_choice, player_score;
 
 boolean check_b, start_level, loader;
+boolean[] explode = new boolean[5];
 boolean[][] level = new boolean[15][15];
 
 Table t;
@@ -25,6 +26,11 @@ ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 
 void initialise()
 {
+  for(int i = 0; i < explode.length; i++)
+  {
+    explode[i] = false;  
+  }//end for
+  
   level_count = 0;
   
   block_num = 15;
@@ -95,9 +101,9 @@ void draw()
           text("Blocker", border * 23/12, border * 7/12);
           text("Destroyer", border * 3, border * 7/12);
           textSize(12);
-          //text("Can", border * 5/6, border * 7/12);
-          //text("Blocker", border * 23/12, border * 7/12);
-          //text("Destroyer", border * 3, border * 7/12);
+          //text("", border * 5/6, border * 7/12);
+          //text("", border * 23/12, border * 7/12);
+          //text("", border * 3, border * 7/12);
           triangle((border * 5.1/6) + (robot_choice * border * 1.11), border * 1.35, 
           (border * 5.6/6) + (robot_choice * border * 1.11), border * 1.25, 
           (border * 6.1/6) + (robot_choice * border * 1.11), border * 1.35);
@@ -243,9 +249,16 @@ void drawLevel()
   for(int i = bombs.size() - 1; i >= 0; i--)
   {
     Bomb bm = bombs.get(i);
-    if(bm.render())
+    if(bm.render(i))
     {
       bombs.remove(bm);
+    }//end if
+    if(explode[i])
+    {
+      explosion(-1, 0, bm.x, bm.y);
+      explosion(0, -1, bm.x, bm.y);
+      explosion(1, 0, bm.x, bm.y);
+      explosion(0, 1, bm.x, bm.y);
     }//end if
   }//for
   for (int i = bricks.size() - 1; i >= 0; i--)
@@ -278,6 +291,27 @@ void drawLevel()
   }//end for
 }//end drawLevel
 
+
+void explosion(int l, int k, int x, int y)
+{
+  for(int i = 1; i < bomb_power; i++)
+  {
+    if(!level[x + (l * i)][y + (k * i)])
+    {
+      brick_x = x + (l * i);
+      brick_y = y + (k * i);
+      return;
+    }//end if
+    rect((x + (l * i)) * block, (y + (k * i)) * block, block, block);
+    if((player_x == (x + (l * i)) && player_y == (y + (k * i))) ||
+    (player_x == x && player_y == y))
+    {
+      player_x = player_y = 1;
+      player_lives--;
+    }//end if
+  }//end for
+}//end explosion
+  
 void level_load()
 {
   bricks.clear();
