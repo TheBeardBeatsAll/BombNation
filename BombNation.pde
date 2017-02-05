@@ -181,6 +181,7 @@ void level()
 {
   background(0);
   translate(border, 0);
+  sideBars();
   fill(#59BCAE);
   rect(0, 0, height, height);
   if(loader)
@@ -188,13 +189,26 @@ void level()
     level_load();
   }//end if
   drawLevel();
-  drawPortal();
-  player.render(player_x, player_y, 0);
   checkPlayer();
 }//end level
 
+void sideBars()
+{
+  fill(200);
+  textSize(36);
+  textAlign(LEFT, CENTER);
+  text("Level " + level_count, - block * 4, block * 2);
+  text("Player Lives:", height + block, block * 2);
+  text("Player Score:\n" + player_score, height + block, block * 5);
+  for(int i = 0; i < player_lives; i++)
+  {
+    player.render(15.3 + (i * 1.1), 2.75, 0);
+  }//end for
+}//end sideBars
+
 void checkPlayer()
 {
+  player.render(player_x, player_y, 0);
   if(player_lives == 0)
   {
     level_count = 5;
@@ -203,6 +217,7 @@ void checkPlayer()
   if(player_x == portal_x && player_y == portal_y)
   {
     level_count++;
+    player_score += 1000;
     player_x = player_y = 1;
     loader = start_level = true;
   }//end if
@@ -242,7 +257,7 @@ void drawLevel()
     for(int i = 0; i < 10; i++)
     {
       enemy_timer[i] = millis();
-    }//end ofr
+    }//end for
     start_level = false;
   }//end if
   
@@ -289,6 +304,8 @@ void drawLevel()
       player_x = player_y = 1;
     }//end if
   }//end for
+  
+  drawPortal();
 }//end drawLevel
 
 
@@ -309,6 +326,20 @@ void explosion(int l, int k, int x, int y)
       player_x = player_y = 1;
       player_lives--;
     }//end if
+    for (int m = enemies.size() - 1; m >= 0; m--)
+    {
+      Enemy e = enemies.get(m);
+      if((e.x == (x + (l * i)) && e.y == (y + (k * i))) ||
+      (e.x == x && e.y == y))
+      {
+        e.lives--;
+        if(e.lives <= 0)
+        {
+          player_score += e.score;
+          enemies.remove(m);
+        }//end if
+      }//end if
+    }//end for
   }//end for
 }//end explosion
   

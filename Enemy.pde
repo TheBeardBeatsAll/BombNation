@@ -16,12 +16,9 @@ class Enemy
   
   void render()
   {
-    if(lives > 0)
-    {
-      fill(0, 255, 125);
-      ellipseMode(CORNER);
-      ellipse(x * block, y * block, block, block);
-    }//end if
+    fill(0, 255, 125);
+    ellipseMode(CORNER);
+    ellipse(x * block, y * block, block, block);
   }//end render
   
   void update()
