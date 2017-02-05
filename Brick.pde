@@ -10,8 +10,23 @@ class Brick
   
   void render()
   {
-    fill(0, 0, 255);
-    rect(x * block, y * block, block, block);
+    for(int i = 0; i < 5; i++)
+    {
+      if(i % 2 == 0)
+      {
+        fill(#6A0D0D);
+        rect(x * block, (y * block) + (i * block/5), block, block/5);
+        fill(#C66126);
+        rect((x * block) + block/3, (y * block) + (i * block/5), block/3, block/5);
+      }//end if
+      else
+      {
+        fill(#9B530B);
+        rect(x * block, (y * block) + (i * block/5), block/2, block/5);
+        fill(#AA2409);
+        rect(x * block + block/2, (y * block) + (i * block/5), block/2, block/5);
+      }//end else
+    }//end for
   }//end render
   
   void destroy()

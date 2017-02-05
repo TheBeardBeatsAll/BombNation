@@ -39,8 +39,6 @@ void initialise()
   
   player_score = 0;
   menu_choice = 1;
-  portal_x = 1;
-  portal_y = 2;
   
   robot_choice = 0;
   player_lives = 5;
@@ -107,16 +105,22 @@ void draw()
         }//end case
         case 1:
         {
+          portal_x = 7;
+          portal_y = 11;
           level();
           break;
         }//end case
         case 2:
         {
+          portal_x = 13;
+          portal_y = 4;
           level();
           break;
         }//end case
         case 3:
         {
+          portal_x = 9;
+          portal_y = 8;
           level();
           break;
         }//end case
