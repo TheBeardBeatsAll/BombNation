@@ -4,16 +4,17 @@ void setup()
   initialise();
 }//end setup
 
-float border, bomb_timer;
+float border, bomb_timer, level_timer, level_time_start;
 float[] enemy_timer = new float[10];
 float block, block_num;
 
+int secs_left, player_time;
 int player_x, player_y, player_lives;
 int bomb_count, max_bomb, bomb_power;
 int brick_x, brick_y, level_count, robot_choice;
 int portal_x, portal_y, menu_choice, player_score;
 
-boolean check_b, start_level, loader;
+boolean check_b, loader;
 boolean[] explode = new boolean[5];
 boolean[][] level = new boolean[15][15];
 
@@ -32,6 +33,7 @@ void initialise()
   }//end for
   
   level_count = 0;
+  level_timer = 240;
   
   block_num = 15;
   border = (width - height)/2;
@@ -40,9 +42,10 @@ void initialise()
   bomb_power = 2;
   bomb_count = 2;
   max_bomb = 5;
-  start_level = loader = true;
+  loader = true;
   brick_x = brick_y = 0;
   
+  player_time = 0;
   player_score = 0;
   menu_choice = 1;
   
@@ -132,10 +135,12 @@ void draw()
         }//end case
         case 4:
         {
+          int mins = player_time/60;
+          int secs = (player_time % 60);
           textBox(border/8, 0);
           textSize(30);
           text("Congratulations you won\nYour Score is " + player_score
-          + "\nYour time is y\nYou have " + player_lives + " lives remaining"
+          + "\nYour time is " + mins + " mins " + secs + " secs" + "\nYou have " + player_lives + " lives remaining"
           + "\nPress any key to return to main menu", width/2, height/3);
           break;
         }//end case
@@ -144,7 +149,7 @@ void draw()
           textBox(border/8, 0);
           textSize(30);
           text("GAME OVER\nYour Score is " + player_score
-          + "\nYour time is y\nPress any key to return to main menu", width/2, height/3);
+          + "\nPress any key to return to main menu", width/2, height/3);
           //Game Over
           break;
         }//end case
@@ -194,16 +199,27 @@ void level()
 
 void sideBars()
 {
+  float check = (millis() - level_time_start) / 1000;
+  secs_left = int(level_timer - check);
+  int mins = secs_left/60;
+  int secs = (secs_left % 60);
   fill(200);
   textSize(36);
   textAlign(LEFT, CENTER);
-  text("Level " + level_count, - block * 4, block * 2);
+  text("Level " + level_count, - block * 4.5, block * 2);
+  text("Time:", - block * 4.5, block * 4);
+  text( mins + " mins\n" + secs + "secs", - block * 4.5, block * 5.5);
   text("Player Lives:", height + block, block * 2);
   text("Player Score:\n" + player_score, height + block, block * 5);
   for(int i = 0; i < player_lives; i++)
   {
     player.render(15.3 + (i * 1.1), 2.75, 0);
   }//end for
+  
+  if(secs_left == 0)
+  {
+    level_count = 5;
+  }//end if
 }//end sideBars
 
 void checkPlayer()
@@ -218,8 +234,9 @@ void checkPlayer()
   {
     level_count++;
     player_score += 1000;
+    player_time += level_timer - secs_left;
     player_x = player_y = 1;
-    loader = start_level = true;
+    loader = true;
   }//end if
 }//end checkPlayer
 
@@ -251,15 +268,6 @@ void drawLevel()
       }//end else
     }//end for
   }//end for
-  
-  if(start_level)
-  {
-    for(int i = 0; i < 10; i++)
-    {
-      enemy_timer[i] = millis();
-    }//end for
-    start_level = false;
-  }//end if
   
   for(int i = bombs.size() - 1; i >= 0; i--)
   {
@@ -385,6 +393,13 @@ void level_load()
     }//end else if
     enemies.add(e);
   }//end for
+  for(int i = 0; i < 10; i++)
+  {
+    enemy_timer[i] = millis();
+  }//end for
+  
+  level_time_start = millis();
+  
   loader = false;
 }//end level_load
 
@@ -456,6 +471,13 @@ void keyPressed()
     }//end if
     else if(level_count >= 1 && level_count <= 3)
     {
+      if(key == ' ')
+      {
+        menu_choice = 1;
+        level_count = 0;
+        player_x = player_y = 1;
+        player_lives = 5;
+      }//end if
       check_b = player.update(key);
       if(check_b == true && bomb_count > 0)
       {
@@ -470,6 +492,7 @@ void keyPressed()
     {
       menu_choice = 1;
       level_count = 0;
+      player_x = player_y = 1;
       player_lives = 5;
     }//end else if
   }//end else if
