@@ -318,7 +318,10 @@ void drawLevel()
   for (int i = enemies.size() - 1; i >= 0; i--)
   {
     Enemy e = enemies.get(i);
+    pushMatrix();
+    translate(e.x * block, e.y * block);
     e.render();
+    popMatrix();
     if((millis() - enemy_timer[i]) >= 1000)
     {
       e.update();
@@ -525,7 +528,7 @@ void keyPressed()
           case 0:
           {
             player = new Kicker('w', 's', 'a', 'd', 'c', 'K', #0DBC20);
-            level_count++;
+            level_count = 3;
             break;
           }//end case
           case 1:

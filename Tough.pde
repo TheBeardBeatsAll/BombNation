@@ -9,11 +9,11 @@ class Tough extends Enemy
   {
     fill(#903480);
     ellipseMode(CORNER);
-    ellipse(x * block, y * block, block, block);
+    ellipse(0, 0, block, block);
     fill(0);
     ellipseMode(CENTER);
-    ellipse((x * block) + (block * 5/16), (y * block) + (block * 3/8), block/6, block/6);
-    ellipse((x * block) + (block * 11/16), (y * block) + (block * 3/8), block/6, block/6);
-    rect((x * block) + (block * 1/4), (y * block) + (block * 5/8), block/2, block/8);
+    ellipse((block * 5/16),(block * 3/8), block/6, block/6);
+    ellipse((block * 11/16), (block * 3/8), block/6, block/6);
+    rect((block * 1/4), (block * 5/8), block/2, block/8);
   }//end render
 }//end Tough

@@ -9,13 +9,21 @@ class Smart extends Enemy
   {
     fill(#DDFF08);
     ellipseMode(CORNER);
-    ellipse(x * block, y * block, block, block);
-    line((x * block) + (block * 1/4), (y * block) + (block * 5/8), (x * block) + (block * 3/4), (y * block) + (block * 5/8));
+    ellipse(0, 0, block, block);
+    fill(0);
+    line((block * 1/4), (block * 1/4), (block * 1/2), (block * 1/2));
+    line((block * 1/4), (block * 1/2), (block * 1/2), (block * 1/4));
+    line((block * 1/2), (block * 1/4), (block * 3/4), (block * 1/2));
+    line((block * 1/2), (block * 1/2), (block * 3/4), (block * 1/4));
+    line((block * 1/4), (block * 5/8), (block * 3/4), (block * 5/8));
+    ellipseMode(CENTER);
+    ellipse((block * 3/8), (block * 3/8), block/8, block/8);
+    ellipse((block * 5/8), (block * 3/8), block/8, block/8);
     fill(255);
-    triangle((x * block) + (block * 5/12), (y * block) + (block * 5/8), (x * block) + (block * 1/2), (y * block) + (block * 5/8)
-    , (x * block) + (block * 11/24), (y * block) + (block * 3/4));
-    triangle((x * block) + (block * 7/12), (y * block) + (block * 5/8), (x * block) + (block * 2/3), (y * block) + (block * 5/8)
-    , (x * block) + (block * 15/24), (y * block) + (block * 3/4));
+    triangle((block * 5/12), (block * 5/8), (block * 1/2), (block * 5/8)
+    , (block * 11/24), (block * 3/4));
+    triangle((block * 7/12), (block * 5/8), (block * 2/3), (block * 5/8)
+    , (block * 15/24), (block * 3/4));
   }//end render
   
   void update()

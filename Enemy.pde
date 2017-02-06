@@ -16,9 +16,14 @@ class Enemy
   
   void render()
   {
-    fill(0, 255, 125);
+    fill(#115AB7);
     ellipseMode(CORNER);
-    ellipse(x * block, y * block, block, block);
+    ellipse(0, 0, block, block);
+    fill(#4411B7);
+    ellipseMode(CENTER);
+    ellipse(block/2, block/2, block/2, block/2);
+    fill(255);
+    ellipse(block/2, block/2, block/4, block/4);
   }//end render
   
   void update()
