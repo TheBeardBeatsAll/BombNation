@@ -4,9 +4,10 @@ void setup()
   initialise();
 }//end setup
 
-float border, bomb_timer, level_timer, level_time_start;
+float border, level_timer, level_time_start;
+float[] bomb_timer = new float[5];
 float[] enemy_timer = new float[10];
-float block, block_num;
+float block, block_num, player_button;
 
 int secs_left, player_time;
 int player_x, player_y, player_lives;
@@ -14,7 +15,7 @@ int bomb_count, max_bomb, bomb_power;
 int brick_x, brick_y, level_count, robot_choice;
 int portal_x, portal_y, menu_choice, player_score;
 
-boolean check_b, loader;
+boolean check_b, loader, button;
 boolean[] explode = new boolean[5];
 boolean[][] level = new boolean[15][15];
 
@@ -42,7 +43,7 @@ void initialise()
   bomb_power = 3;
   bomb_count = 1;
   max_bomb = 5;
-  loader = true;
+  loader = button = true;
   brick_x = brick_y = 0;
   
   player_time = 0;
@@ -291,12 +292,15 @@ void drawLevel()
     
     if(b.x == brick_x && b.y == brick_y)
     {
-      if(b.destroy(bomb_timer))
+      for(int k = 0; k < bombs.size(); k++)
       {
-        level[b.x][b.y] = true;
-        bricks.remove(i);
-        brick_x = brick_y = 0;
-      }//end if
+        if(b.destroy(bomb_timer[k]))
+        {
+          level[b.x][b.y] = true;
+          bricks.remove(i);
+          brick_x = brick_y = 0;
+        }//end if
+      }//end for
     }//end if
   }//end for
   
@@ -315,6 +319,12 @@ void drawLevel()
       player_x = player_y = 1;
     }//end if
   }//end for
+  
+  if(millis() - player_button > 500)
+  {
+    button = true;
+    player_button = millis();
+  }//end if
   
   drawPortal();
 }//end drawLevel
@@ -396,12 +406,17 @@ void level_load()
     }//end else if
     enemies.add(e);
   }//end for
-  for(int i = 0; i < 10; i++)
+  for(int i = 0; i < enemy_timer.length; i++)
   {
     enemy_timer[i] = millis();
   }//end for
+  for(int i = 0; i < bomb_timer.length; i++)
+  {
+    bomb_timer[i] = 0;
+  }//end for
   
   level_time_start = millis();
+  player_button = millis();
   
   loader = false;
 }//end level_load
@@ -481,14 +496,18 @@ void keyPressed()
         player_x = player_y = 1;
         player_lives = 5;
       }//end if
-      check_b = player.update(key);
-      if(check_b == true && bomb_count > 0)
+      if(button)
       {
-        bomb_timer = millis();
-        Bomb bm = new Bomb(player_x, player_y, bomb_timer);
-        bombs.add(bm);
-        bomb_count--;
-        level[player_x][player_y] = false;
+        check_b = player.update(key);
+        if(check_b == true && bomb_count > 0)
+        {
+          bomb_timer[bombs.size()] = millis();
+          Bomb bm = new Bomb(player_x, player_y, bomb_timer[bombs.size()]);
+          bombs.add(bm);
+          bomb_count--;
+          level[player_x][player_y] = false;
+        }//end if
+        button = false;
       }//end if
     }//end else if
     else if( level_count == 4 || level_count == 5)
