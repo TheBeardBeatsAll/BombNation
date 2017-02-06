@@ -41,7 +41,7 @@ void initialise()
   block = height / block_num;
   
   bomb_power = 3;
-  bomb_count = 1;
+  bomb_count = 2;
   max_bomb = 5;
   loader = button = true;
   brick_x = brick_y = 0;
@@ -292,13 +292,24 @@ void drawLevel()
     
     if(b.x == brick_x && b.y == brick_y)
     {
-      for(int k = 0; k < bombs.size(); k++)
+      for(int k = bombs.size(); k >= 0; k--)
       {
-        if(b.destroy(bomb_timer[k]))
+        float time = ((millis() - bomb_timer[k]) / 1000);
+        boolean check = false;
+        if(time > 3 && time <= 6)
+        {
+          b.destroy();
+        }//end if
+        else if( time > 6)
+        {
+          check = true;
+        }//end else if
+        if(check)
         {
           level[b.x][b.y] = true;
           bricks.remove(i);
           brick_x = brick_y = 0;
+          bomb_timer[k] = 0;
         }//end if
       }//end for
     }//end if
@@ -320,7 +331,7 @@ void drawLevel()
     }//end if
   }//end for
   
-  if(millis() - player_button > 500)
+  if(millis() - player_button > 250)
   {
     button = true;
     player_button = millis();
@@ -332,6 +343,21 @@ void drawLevel()
 
 void explosion(int l, int k, int x, int y)
 {
+  int n, j;
+  fill(#BF4C04);
+  rect(x * block, y * block, block, block);
+  ellipseMode(CENTER);
+  fill(#E0B400);
+  arc(x * block, y * block, block/2, block/2, 0, HALF_PI);
+  arc((x + 1) * block, y * block, block/2, block/2, HALF_PI, PI);
+  arc(x * block, (y + 1) * block, block/2, block/2, PI + HALF_PI, TWO_PI);
+  arc((x + 1) * block, (y + 1) * block, block/2, block/2, PI, PI + HALF_PI);
+  
+  fill(#59BCAE);
+  arc(x * block, y * block, block/4, block/4, 0, HALF_PI);
+  arc((x + 1) * block, y * block, block/4, block/4, HALF_PI, PI);
+  arc(x * block, (y + 1) * block, block/4, block/4, PI + HALF_PI, TWO_PI);
+  arc((x + 1) * block, (y + 1) * block, block/4, block/4, PI, PI + HALF_PI);
   for(int i = 1; i < bomb_power; i++)
   {
     if(!level[x + (l * i)][y + (k * i)])
@@ -340,7 +366,37 @@ void explosion(int l, int k, int x, int y)
       brick_y = y + (k * i);
       return;
     }//end if
-    rect((x + (l * i)) * block, (y + (k * i)) * block, block, block);
+    if(l == 1 || l == -1)
+    {
+      n = 0;
+      j = 1;
+    }//end if
+    else
+    {
+      n = 1;
+      j = 0;
+    }//end else
+    pushMatrix();
+    translate((x + (l * i)) * block, (y + (k * i)) * block);
+    //if(i  == bomb_power - 1)
+    //{
+    //  //fill(#E0B400);
+    //  //triangle((x + (l * i)) * block + (block/8), (y + (k * i)) * block  + (block/8 ),
+    //  //(x + (l * i)) * block + (block * 7/8 * n), (y + (k * i)) * block  + (block * 7/8 * j),
+    //  //(x + 0.5 + (l * i)) * block + (block * 3/8 * n), (y  + 0.5 + (k * i)) * block  + (block * 3/8 * j));
+    //  //fill(#BF4C04);
+    //  //triangle((x + (l * i)) * block + (block/4 * n), (y + (k * i)) * block + (block/4 * j),
+    //  //(x + (l * i)) * block + (block * 3/4 * n), (y + (k * i)) * block + (block * 3/4 * j), 
+    //  //(x  + 0.5 + (l * i)) * block + (block * 1/4 * n), (y  + 0.5 + (k * i)) * block + (block * 1/4 * j));
+    //}//end if
+    //else
+    //{
+      fill(#E0B400);
+      rect((block/8) * n,(block/8) * j, block - (block * 1/4 * n), block - (block * 1/4 * j));
+      fill(#BF4C04);
+      rect((block/4) * n,(block/4) * j, block - (block * 1/2 * n), block - (block * 1/2 * j));
+    //}//end else
+   popMatrix();
     if((player_x == (x + (l * i)) && player_y == (y + (k * i))) ||
     (player_x == x && player_y == y))
     {
