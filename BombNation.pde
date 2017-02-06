@@ -39,8 +39,8 @@ void initialise()
   border = (width - height)/2;
   block = height / block_num;
   
-  bomb_power = 2;
-  bomb_count = 2;
+  bomb_power = 3;
+  bomb_count = 1;
   max_bomb = 5;
   loader = true;
   brick_x = brick_y = 0;
@@ -291,9 +291,12 @@ void drawLevel()
     
     if(b.x == brick_x && b.y == brick_y)
     {
-      level[b.x][b.y] = true;
-      bricks.remove(i);
-      brick_x = brick_y = 0;
+      if(b.destroy(bomb_timer))
+      {
+        level[b.x][b.y] = true;
+        bricks.remove(i);
+        brick_x = brick_y = 0;
+      }//end if
     }//end if
   }//end for
   

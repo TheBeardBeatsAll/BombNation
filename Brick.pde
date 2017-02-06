@@ -29,8 +29,23 @@ class Brick
     }//end for
   }//end render
   
-  void destroy()
+  boolean destroy(float t)
   {
-    
+    float time = ((millis() - t) / 1000);
+    if(time <= 4)
+    {
+      fill(#E9FF00);
+      rect(x * block, y * block, block, block);
+      stroke(0);
+      fill(#FF8400);
+      rect(x * block + (block/6), y * block + (block/6), block - (block/3), block - (block/3));
+      fill(#FF3300);
+      rect(x * block + (block/3), y * block + (block/3), block - (block * 2/3), block - (block * 2/3));
+      return false;
+    }//end if
+    else
+    {
+      return true;
+    }//end 
   }//end destroy
 }//end Brick
