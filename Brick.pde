@@ -21,16 +21,16 @@ class Brick
       if(i % 2 == 0)
       {
         fill(#6A0D0D);
-        rect(x * block, (y * block) + (i * block/5), block, block/5);
+        rect(0, (i * block/5), block, block/5);
         fill(#C66126);
-        rect((x * block) + block/3, (y * block) + (i * block/5), block/3, block/5);
+        rect(block/3, (i * block/5), block/3, block/5);
       }//end if
       else
       {
         fill(#9B530B);
-        rect(x * block, (y * block) + (i * block/5), block/2, block/5);
+        rect(0, (i * block/5), block/2, block/5);
         fill(#AA2409);
-        rect(x * block + block/2, (y * block) + (i * block/5), block/2, block/5);
+        rect(block/2, (i * block/5), block/2, block/5);
       }//end else
     }//end for
   }//end render
@@ -38,11 +38,11 @@ class Brick
   void destroy()
   {
     fill(#E9FF00);
-    rect(x * block, y * block, block, block);
+    rect(0, 0, block, block);
     stroke(0);
     fill(#FF8400);
-    rect(x * block + (block/6), y * block + (block/6), block - (block/3), block - (block/3));
+    rect((block/6), (block/6), block - (block/3), block - (block/3));
     fill(#FF3300);
-    rect(x * block + (block/3), y * block + (block/3), block - (block * 2/3), block - (block * 2/3));
+    rect((block/3), (block/3), block - (block * 2/3), block - (block * 2/3));
   }//end destroy
 }//end Brick

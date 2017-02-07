@@ -76,11 +76,15 @@ void draw()
     case 2:
     { 
       textBox(-border/4, -border/4);
+      fill(#59BCAE);
+      rect(width * 0.1, height * 0.215, width * 0.75, height * 0.3);
+      fill(200);
       textSize(40);
       text("How To Play", width/2, height/8);
       textSize(24);
       text("Player Robots", width * 5/32, height * 3/16);
-      text("Blocks", width * 8/16, height * 3/16);
+      text("Bombs", width * 7/16, height * 3/16);
+      text("Blocks", width * 9/16, height * 3/16);
       text("Enemies", width * 11/16, height * 3/16);
       text("Power Ups", width * 13/16, height * 3/16);
       Player pl = new Kicker('w', 's', 'a', 'd', 'c', 'K', #0DBC20, 0, 1, 'e');
@@ -91,12 +95,21 @@ void draw()
       pl.render(3, 6.5, 0);
       
       pushMatrix();
-      //translate();
+      translate(width * 0.41, height * 0.225);
       Bomb b = new Bomb(1, 1, 1);
       b.renderTick();
+      translate(0, height * 0.1);
       b.renderTock();
       
-      translate(width * 0.665, height * 0.225);
+      translate(width * 0.13, -height * 0.1);
+      Brick br = new Brick(1, 1);
+      br.render();
+      translate(0, height * 0.1);
+      drawWall();
+      translate(0, height * 0.1);
+      drawPortal();
+      
+      translate(width * 0.125, -height * 0.2);
       Enemy e = new Enemy(1, 1);
       e.render();
       translate(0, height * 0.1);
@@ -152,9 +165,9 @@ void draw()
           text("Can kick a bomb away", border * 1.25, border * 0.75, border * 0.3, border * 0.3);
           text("Can create a block of bricks", border * 2.4, border * 0.75, border * 0.3, border * 0.4);
           text("Can destroy a block of bricks", border * 3.45, border * 0.75, border * 0.3, border * 0.4);
-          triangle((border * 5.1/6) + (robot_choice * border * 1.11), border * 1.35, 
-          (border * 5.6/6) + (robot_choice * border * 1.11), border * 1.25, 
-          (border * 6.1/6) + (robot_choice * border * 1.11), border * 1.35);
+          triangle((border * 5.2/6) + (robot_choice * border * 1.11), border * 1.35, 
+          (border * 5.7/6) + (robot_choice * border * 1.11), border * 1.25, 
+          (border * 6.2/6) + (robot_choice * border * 1.11), border * 1.35);
           break;
         }//end case
         case 1:
@@ -394,26 +407,17 @@ void drawLevel()
   {
     for(int j = 0; j < 15; j++)
     {
+      pushMatrix();
+      translate(i * block, j * block);
       if( i == 0 || i == 14 || j == 0 || j == 14 || ( i % 2 == 0 && j % 2 == 0))
       {
-        stroke(0);
-        fill(150);
-        rect(0 + (i * block), 0 + (j * block), block, block);
-        fill(255);
-        rect(0 + (i * block) + (block/6), 0 + (j * block) + (block/6), block - (block/3), block - (block/3));
-        fill(50);
-        rect(0 + (i * block) + (block/3), 0 + (j * block) + (block/3), block - (block * 2/3), block - (block * 2/3));
+        drawWall();
       }//end if
       else
       {
-        fill(#278945);
-        stroke(#278945);
-        rect(0 + (i * block) + (block * 7/16), 0 + (j * block)  + (block * 7/16), block/8, block/8);
-        rect(0 + (i * block) + (block * 7/16), 0 + (j * block)  + (block/8), block/8, block * 3/16);
-        rect(0 + (i * block) + (block * 7/16), 0 + (j * block)  + (block * 11/16), block/8, block * 3/16);
-        rect(0 + (i * block) + (block/8), 0 + (j * block)  + (block * 7/16), block * 3/16, block/8);
-        rect(0 + (i * block) + (block * 11/16), 0 + (j * block)  + (block * 7/16), block * 3/16, block/8);
+        drawFloor();
       }//end else
+      popMatrix();
     }//end for
   }//end for
   
@@ -436,11 +440,24 @@ void drawLevel()
     }//end if
   }//for
   
+  drawPortal();
+  for (int i = powerups.size() - 1; i >= 0; i--)
+  {
+    Pbomb p = powerups.get(i);
+    pushMatrix();
+    translate(p.x * block, p.y * block);
+    p.render();
+    popMatrix();
+  }//end for
+  
   for (int i = bricks.size() - 1; i >= 0; i--)
   {
     Brick b = bricks.get(i);
+    pushMatrix();
+    translate(b.x * block, b.y * block);
     b.render();
     
+   
     if(b.x == brick_x && b.y == brick_y)
     {
       if(destroy)
@@ -454,14 +471,6 @@ void drawLevel()
         brick_x = brick_y = 0;
       }//end if
     }//end if
-  }//end for
-  
-  for (int i = powerups.size() - 1; i >= 0; i--)
-  {
-    Pbomb p = powerups.get(i);
-    pushMatrix();
-    translate(p.x * block, p.y * block);
-    p.render();
     popMatrix();
   }//end for
   
@@ -499,10 +508,37 @@ void drawLevel()
       cooldown = -1;
     }//end if
   }//end if
-  
-  drawPortal();
 }//end drawLevel
 
+void drawWall()
+{
+  stroke(0);
+  fill(150);
+  rect(0, 0, block, block);
+  fill(255);
+  rect(block/6, block/6, block - (block/3), block - (block/3));
+  fill(50);
+  rect(block/3, block/3, block - (block * 2/3), block - (block * 2/3));
+}//end drawWall
+
+void drawFloor()
+{
+  fill(#278945);
+  stroke(#278945);
+  rect(block * 7/16, (block * 7/16), block/8, block/8);
+  rect(block * 7/16, (block/8), block/8, block * 3/16);
+  rect(block * 7/16, block * 11/16, block/8, block * 3/16);
+  rect(block/8, block * 7/16, block * 3/16, block/8);
+  rect(block * 11/16, block * 7/16, block * 3/16, block/8);
+}//end drawFloor
+
+void drawPortal()
+{
+  fill(0);
+  rect(portal_x * block, portal_y * block, block, block);
+  fill(#091DE8);
+  rect(portal_x * block + block/6, portal_y * block + block/6, block - block/3, block - block/3);
+}//end drawPortal
 
 void explosion(int l, int k, int x, int y)
 {
@@ -591,14 +627,6 @@ void explosion(int l, int k, int x, int y)
     }//end for
   }//end for
 }//end explosion
-
-void drawPortal()
-{
-  fill(0);
-  rect(portal_x * block, portal_y * block, block, block);
-  fill(#091DE8);
-  rect(portal_x * block + block/6, portal_y * block + block/6, block - block/3, block - block/3);
-}//end drawPortal
 
 void keyPressed()
 {

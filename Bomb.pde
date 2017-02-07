@@ -12,6 +12,7 @@ class Bomb
   
   void renderTick()
   {
+    ellipseMode(CORNERS);
     fill(125);
     rect(0.55 * block, 0.1 * block, block * 0.2, block * 0.4);
     fill(0);
@@ -22,6 +23,7 @@ class Bomb
   
   void renderTock()
   {
+    ellipseMode(CORNERS);
     fill(125);
     rect(0.45 * block, 0, block * 0.2, block * 0.4);
     fill(#B71611);
@@ -33,7 +35,6 @@ class Bomb
   boolean render(int i)
   {
     float time = ((millis() - t) / 1000); 
-    ellipseMode(CORNERS);
     if(time < 0.5 || (time >= 1 && time < 1.5) || (time >= 2 && time < 2.5))
     {
       renderTick();
