@@ -249,14 +249,14 @@ void level_load()
   for(TableRow row : t.rows())
   {
     Pbomb p = new Pbomb(row);
-    //if(p.type == 2)
-    //{
-    //  p = new Pboom(row);
-    //}//end if
-    //else if(e.type == 3)
-    //{
-    //  P = new Pscore(row);
-    //}//end else if
+    if(p.type == 2)
+    {
+      p = new Pboom(row);
+    }//end if
+    else if(p.type == 3)
+    {
+      p = new Pscore(row);
+    }//end else if
     powerups.add(p);
   }//end for
   
@@ -325,6 +325,27 @@ void checkPlayer()
     player_x = player_y = 1;
     loader = true;
   }//end if
+  
+  for (int i = powerups.size() - 1; i >= 0; i--)
+  {
+    Pbomb p = powerups.get(i);
+    if(player_x == p.x && player_y == p.y)
+    {
+      if(p.type == 1 && bomb_count < max_bomb)
+      {
+        bomb_count++;
+      }//end if
+      else if(p.type == 2)
+      {
+        bomb_power++;
+      }//end else if
+      else if(p.type == 3)
+      {
+        player_score += 1000;
+      }//end else if
+      powerups.remove(i);
+    }//end if
+  }//end for
 }//end checkPlayer
 
 void drawLevel()
@@ -424,7 +445,7 @@ void drawLevel()
   
   if(cooldown != -1)
   {
-    if((millis() - cooldown) / 1000 >= 10)
+    if((millis() - cooldown) / 1000 >= 1)
     {
       cooldown = -1;
     }//end if

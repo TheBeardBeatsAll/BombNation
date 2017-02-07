@@ -1,9 +1,9 @@
-class Pboom extends Pbomb
+class Pscore extends Pbomb
 {
-  Pboom(TableRow row)
+  Pscore(TableRow row)
   {
     super(row);
-  }//end Pboom
+  }//end Pscore
   
   void render()
   {
@@ -12,6 +12,6 @@ class Pboom extends Pbomb
     fill(0);
     textSize(12);
     textAlign(CENTER, CENTER);
-    text("MORE\nBOOM",  x * block + block/2, y * block + block/2);
+    text("+1000\nScore",  x * block + block/2, y * block + block/2);
   }//end render
-}//end Pboom
+}//end Pscore
