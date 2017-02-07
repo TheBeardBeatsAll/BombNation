@@ -5,6 +5,11 @@ class Smart extends Enemy
     super(row);
   }//end constructor
   
+  Smart(int x, int y)
+  {
+    super(x, y);
+  }
+  
   void render()
   {
     fill(#DDFF08);

@@ -14,6 +14,12 @@ class Enemy
     this.score = row.getInt(6);
   }//end Brick
   
+  Enemy(int x, int y)
+  {
+    this.x = x;
+    this.y = y;
+  }
+  
   void render()
   {
     fill(#115AB7);

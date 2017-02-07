@@ -8,6 +8,12 @@ class Pbomb
     this.type = row.getInt(2);
   }//end Brick
   
+  Pbomb(int x, int y)
+  {
+    this.x = x;
+    this.y = y;
+  }//end Brick
+  
   void render()
   {
     fill(#5BF559);

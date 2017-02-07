@@ -5,6 +5,11 @@ class Pscore extends Pbomb
     super(row);
   }//end Pscore
   
+  Pscore(int x, int y)
+  {
+    super(x, y);
+  }//end Brick
+  
   void render()
   {
     fill(#5BF559);

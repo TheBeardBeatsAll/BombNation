@@ -5,6 +5,11 @@ class Pboom extends Pbomb
     super(row);
   }//end Pboom
   
+  Pboom(int x, int y)
+  {
+    super(x, y);
+  }//end Brick
+  
   void render()
   {
     fill(#5BF559);

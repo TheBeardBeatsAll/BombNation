@@ -5,6 +5,11 @@ class Tough extends Enemy
     super(row);
   }//end constructor
   
+  Tough(int x, int y)
+  {
+    super(x, y);
+  }
+  
   void render()
   {
     fill(#903480);

@@ -9,10 +9,10 @@ float bomb_timer, cooldown;
 float[] enemy_timer = new float[10];
 float block, block_num, player_button;
 
-int secs_left, player_time;
+int secs_left, player_time, robot_choice;
 int player_x, player_y, player_lives;
 int bomb_count, max_bomb, bomb_power;
-int brick_x, brick_y, level_count, robot_choice;
+int brick_x, brick_y, level_count;
 int portal_x, portal_y, menu_choice, player_score;
 
 boolean check_b, loader, button, destroy;
@@ -76,6 +76,15 @@ void draw()
     case 2:
     { 
       textBox(-border/4, -border/4);
+      textSize(40);
+      text("How To Play", width/2, height/8);
+      textSize(24);
+      text("Player Robots", width * 3/16, height * 3/16);
+      text("Blocks", width * 8/16, height * 3/16);
+      text("Enemies", width * 11/16, height * 3/16);
+      text("Power Ups", width * 13/16, height * 3/16);
+      
+      
       menu();
       break;
     }//end case
@@ -433,6 +442,8 @@ void drawLevel()
     if(player_x == e.x && player_y == e.y)
     {
       player_lives--;
+      bomb_power = 2;
+      bomb_count = 1;
       player_x = player_y = 1;
     }//end if
   }//end for
@@ -522,6 +533,8 @@ void explosion(int l, int k, int x, int y)
     (player_x == x && player_y == y))
     {
       player_x = player_y = 1;
+      bomb_power = 2;
+      bomb_count = 1;
       player_lives--;
     }//end if
     for (int m = enemies.size() - 1; m >= 0; m--)
