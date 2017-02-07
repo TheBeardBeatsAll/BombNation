@@ -39,6 +39,7 @@ class Bomb
     }//end if
     else
     {
+      destroy = false;
       explode[i] = false;
       bomb_count++;
       return level[x][y] = true;

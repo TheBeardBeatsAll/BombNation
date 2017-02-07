@@ -4,8 +4,8 @@ void setup()
   initialise();
 }//end setup
 
-float border, level_timer, level_time_start, cooldown;
-float[] bomb_timer = new float[5];
+float border, level_timer, level_time_start;
+float bomb_timer, cooldown;
 float[] enemy_timer = new float[10];
 float block, block_num, player_button;
 
@@ -40,8 +40,8 @@ void initialise()
   border = (width - height)/2;
   block = height / block_num;
   
-  bomb_power = 3;
-  bomb_count = 2;
+  bomb_power = 2;
+  bomb_count = 1;
   max_bomb = 5;
   loader = button = true;
   destroy = false;
@@ -246,10 +246,8 @@ void level_load()
   {
     enemy_timer[i] = millis();
   }//end for
-  for(int i = 0; i < bomb_timer.length; i++)
-  {
-    bomb_timer[i] = 0;
-  }//end for
+  
+  bomb_timer = 0;
   
   level_time_start = millis();
   player_button = millis();
@@ -362,29 +360,16 @@ void drawLevel()
     
     if(b.x == brick_x && b.y == brick_y)
     {
-      //for(int k = bombs.size(); k >= 0; k--)
-      //{
-      //  float time = ((millis() - bomb_timer[k]) / 1000);
-      //  boolean check = false;
-      //  if(time > 3 && time <= 6)
       if(destroy)
-        {
-          b.destroy();
-        }//end if
-        //else if( time > 6)
-        //{
-        //  check = true;
-        //}//end else if
-        //if(check)
-        else
-        {
-          level[b.x][b.y] = true;
-          bricks.remove(i);
-          brick_x = brick_y = 0;
-          destroy = false;
-          //bomb_timer[k] = 0;
-        }//end if
-      //}//end for
+      {
+        b.destroy();
+      }//end if
+      else
+      {
+        level[b.x][b.y] = true;
+        bricks.remove(i);
+        brick_x = brick_y = 0;
+      }//end if
     }//end if
   }//end for
   
@@ -415,7 +400,7 @@ void drawLevel()
   
   if(cooldown != -1)
   {
-    if((millis() - cooldown) / 1000 >= 1)
+    if((millis() - cooldown) / 1000 >= 10)
     {
       cooldown = -1;
     }//end if
@@ -466,10 +451,18 @@ void explosion(int l, int k, int x, int y)
     {
       pushMatrix();
       translate(block/2, block/2);
+      float theta = 0;
+      if(l == -1 || k == -1)
+      {
+        theta = PI;
+      }//end if
+      rotate(theta);
       fill(#E0B400);
-      triangle((block/8 * n), (block/2 * j), (block * 7/8 * n), (block * 1/2 * j), (block * 3/8 * n), (block * 3/8 * j));
+      triangle((-block * 3/8 * n) - (block/2 * j), (-block * 3/8 * j) - (block/2 * n), 
+      (block * 3/8 * n)  - (block/2 * j), (block * 3/8 * j) - (block/2 * n), (block * 3/8 * j), (block * 3/8 * n));
       fill(#BF4C04);
-      triangle((block/4 * n), (block/4 * j), (block * 3/4 * n), (block * 3/4 * j), (block * 1/4 * n), (block * 1/4 * j));
+      triangle((-block * 1/4 * n) - (block/2 * j), (-block * 1/4 * j) - (block/2 * n), 
+      (block * 1/4 * n)  - (block/2 * j), (block * 1/4 * j) - (block/2 * n), (block * 1/8 * j), (block * 1/8 * n));
       popMatrix();
     }//end if
     else
@@ -571,7 +564,7 @@ void keyPressed()
     }//end if
     else if(level_count >= 1 && level_count <= 3)
     {
-      if(key == ' ')
+      if(key == 'g')
       {
         menu_choice = 1;
         level_count = 0;
@@ -583,8 +576,8 @@ void keyPressed()
         check_b = player.update(key);
         if(check_b == true && bomb_count > 0)
         {
-          bomb_timer[bombs.size()] = millis();
-          Bomb bm = new Bomb(player_x, player_y, bomb_timer[bombs.size()]);
+          bomb_timer = millis();
+          Bomb bm = new Bomb(player_x, player_y, bomb_timer);
           bombs.add(bm);
           bomb_count--;
           level[player_x][player_y] = false;
