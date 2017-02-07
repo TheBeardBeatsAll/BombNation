@@ -4,7 +4,7 @@ void setup()
   initialise();
 }//end setup
 
-float border, level_timer, level_time_start;
+float border, level_timer, level_time_start, cooldown;
 float[] bomb_timer = new float[5];
 float[] enemy_timer = new float[10];
 float block, block_num, player_button;
@@ -15,7 +15,7 @@ int bomb_count, max_bomb, bomb_power;
 int brick_x, brick_y, level_count, robot_choice;
 int portal_x, portal_y, menu_choice, player_score;
 
-boolean check_b, loader, button;
+boolean check_b, loader, button, destroy;
 boolean[] explode = new boolean[5];
 boolean[][] level = new boolean[15][15];
 
@@ -44,11 +44,13 @@ void initialise()
   bomb_count = 2;
   max_bomb = 5;
   loader = button = true;
+  destroy = false;
   brick_x = brick_y = 0;
   
   player_time = 0;
   player_score = 0;
   menu_choice = 1;
+  cooldown = -1;
   
   robot_choice = 0;
   player_lives = 5;
@@ -92,11 +94,11 @@ void draw()
           textBox(0, -border/8);
           textSize(30);
           text("Choose a Robot Class:", width/2, height/7);
-          player = new Kicker('w', 's', 'a', 'd', 'c', 'K', #0DBC20);
+          player = new Kicker('w', 's', 'a', 'd', 'c', 'K', #0DBC20, 0, 1, 'e');
           player.render(player_x + 3, player_y + 3, 2);
-          player = new Blocker('w', 's', 'a', 'd', 'c', 'B', #0064FF);
+          player = new Blocker('w', 's', 'a', 'd', 'c', 'B', #0064FF, 0, 1, 'e');
           player.render(player_x + 9.5, player_y + 3, 2);
-          player = new Destroyer('w', 's', 'a', 'd', 'c', 'D', #D80726);
+          player = new Destroyer('w', 's', 'a', 'd', 'c', 'D', #D80726, 0, 1, 'e');
           player.render(player_x + 16, player_y + 3, 2);
           fill(200);
           textSize(24);
@@ -198,6 +200,63 @@ void level()
   checkPlayer();
 }//end level
 
+void level_load()
+{
+  bricks.clear();
+  enemies.clear();
+  
+  for(int i = 0; i < 15 ; i++)
+  {
+    for(int j = 0; j < 15; j++)
+    {
+      if( i == 0 || i == 14 || j == 0 || j == 14 || ( i % 2 == 0 && j % 2 == 0))
+      {
+        level[i][j] = false;
+      }//end if
+      else
+      {
+        level[i][j] = true;
+      }//end else
+    }//end for
+  }//end for
+  
+  t = loadTable("brick" + level_count + ".csv", "csv");
+  for(TableRow row : t.rows())
+  {
+    Brick b = new Brick(row);
+    level[b.x][b.y] = false;
+    bricks.add(b);
+  }//end for
+  
+  t = loadTable("enemy" + level_count + ".csv", "csv");
+  for(TableRow row : t.rows())
+  {
+    Enemy e = new Enemy(row);
+    if(e.type == 2)
+    {
+      e = new Tough(row);
+    }//end if
+    else if(e.type == 3)
+    {
+      e = new Smart(row);
+    }//end else if
+    enemies.add(e);
+  }//end for
+  for(int i = 0; i < enemy_timer.length; i++)
+  {
+    enemy_timer[i] = millis();
+  }//end for
+  for(int i = 0; i < bomb_timer.length; i++)
+  {
+    bomb_timer[i] = 0;
+  }//end for
+  
+  level_time_start = millis();
+  player_button = millis();
+  
+  loader = false;
+}//end level_load
+
 void sideBars()
 {
   float check = (millis() - level_time_start) / 1000;
@@ -212,6 +271,17 @@ void sideBars()
   text( mins + " mins\n" + secs + "secs", - block * 4.5, block * 5.5);
   text("Player Lives:", height + block, block * 2);
   text("Player Score:\n" + player_score, height + block, block * 5);
+  text("Power Ready:\n", height + block, block * 7);
+  String power = "";
+  if( cooldown != -1)
+  {
+    power = "No";
+  }//end else
+  else
+  {
+    power = "Yes";
+  }//end else
+  text(power, height + block, block * 8);
   for(int i = 0; i < player_lives; i++)
   {
     player.render(15.3 + (i * 1.1), 2.75, 0);
@@ -292,26 +362,29 @@ void drawLevel()
     
     if(b.x == brick_x && b.y == brick_y)
     {
-      for(int k = bombs.size(); k >= 0; k--)
-      {
-        float time = ((millis() - bomb_timer[k]) / 1000);
-        boolean check = false;
-        if(time > 3 && time <= 6)
+      //for(int k = bombs.size(); k >= 0; k--)
+      //{
+      //  float time = ((millis() - bomb_timer[k]) / 1000);
+      //  boolean check = false;
+      //  if(time > 3 && time <= 6)
+      if(destroy)
         {
           b.destroy();
         }//end if
-        else if( time > 6)
-        {
-          check = true;
-        }//end else if
-        if(check)
+        //else if( time > 6)
+        //{
+        //  check = true;
+        //}//end else if
+        //if(check)
+        else
         {
           level[b.x][b.y] = true;
           bricks.remove(i);
           brick_x = brick_y = 0;
-          bomb_timer[k] = 0;
+          destroy = false;
+          //bomb_timer[k] = 0;
         }//end if
-      }//end for
+      //}//end for
     }//end if
   }//end for
   
@@ -338,6 +411,14 @@ void drawLevel()
   {
     button = true;
     player_button = millis();
+  }//end if
+  
+  if(cooldown != -1)
+  {
+    if((millis() - cooldown) / 1000 >= 1)
+    {
+      cooldown = -1;
+    }//end if
   }//end if
   
   drawPortal();
@@ -381,25 +462,24 @@ void explosion(int l, int k, int x, int y)
     }//end else
     pushMatrix();
     translate((x + (l * i)) * block, (y + (k * i)) * block);
-    //if(i  == bomb_power - 1)
-    //{
-    //  //fill(#E0B400);
-    //  //triangle((x + (l * i)) * block + (block/8), (y + (k * i)) * block  + (block/8 ),
-    //  //(x + (l * i)) * block + (block * 7/8 * n), (y + (k * i)) * block  + (block * 7/8 * j),
-    //  //(x + 0.5 + (l * i)) * block + (block * 3/8 * n), (y  + 0.5 + (k * i)) * block  + (block * 3/8 * j));
-    //  //fill(#BF4C04);
-    //  //triangle((x + (l * i)) * block + (block/4 * n), (y + (k * i)) * block + (block/4 * j),
-    //  //(x + (l * i)) * block + (block * 3/4 * n), (y + (k * i)) * block + (block * 3/4 * j), 
-    //  //(x  + 0.5 + (l * i)) * block + (block * 1/4 * n), (y  + 0.5 + (k * i)) * block + (block * 1/4 * j));
-    //}//end if
-    //else
-    //{
+    if(i  == bomb_power - 1)
+    {
+      pushMatrix();
+      translate(block/2, block/2);
+      fill(#E0B400);
+      triangle((block/8 * n), (block/2 * j), (block * 7/8 * n), (block * 1/2 * j), (block * 3/8 * n), (block * 3/8 * j));
+      fill(#BF4C04);
+      triangle((block/4 * n), (block/4 * j), (block * 3/4 * n), (block * 3/4 * j), (block * 1/4 * n), (block * 1/4 * j));
+      popMatrix();
+    }//end if
+    else
+    {
       fill(#E0B400);
       rect((block/8) * n,(block/8) * j, block - (block * 1/4 * n), block - (block * 1/4 * j));
       fill(#BF4C04);
       rect((block/4) * n,(block/4) * j, block - (block * 1/2 * n), block - (block * 1/2 * j));
-    //}//end else
-   popMatrix();
+    }//end else
+    popMatrix();
     if((player_x == (x + (l * i)) && player_y == (y + (k * i))) ||
     (player_x == x && player_y == y))
     {
@@ -422,63 +502,6 @@ void explosion(int l, int k, int x, int y)
     }//end for
   }//end for
 }//end explosion
-  
-void level_load()
-{
-  bricks.clear();
-  enemies.clear();
-  
-  for(int i = 0; i < 15 ; i++)
-  {
-    for(int j = 0; j < 15; j++)
-    {
-      if( i == 0 || i == 14 || j == 0 || j == 14 || ( i % 2 == 0 && j % 2 == 0))
-      {
-        level[i][j] = false;
-      }//end if
-      else
-      {
-        level[i][j] = true;
-      }//end else
-    }//end for
-  }//end for
-  
-  t = loadTable("brick" + level_count + ".csv", "csv");
-  for(TableRow row : t.rows())
-  {
-    Brick b = new Brick(row);
-    level[b.x][b.y] = false;
-    bricks.add(b);
-  }//end for
-  
-  t = loadTable("enemy" + level_count + ".csv", "csv");
-  for(TableRow row : t.rows())
-  {
-    Enemy e = new Enemy(row);
-    if(e.type == 2)
-    {
-      e = new Tough(row);
-    }//end if
-    else if(e.type == 3)
-    {
-      e = new Smart(row);
-    }//end else if
-    enemies.add(e);
-  }//end for
-  for(int i = 0; i < enemy_timer.length; i++)
-  {
-    enemy_timer[i] = millis();
-  }//end for
-  for(int i = 0; i < bomb_timer.length; i++)
-  {
-    bomb_timer[i] = 0;
-  }//end for
-  
-  level_time_start = millis();
-  player_button = millis();
-  
-  loader = false;
-}//end level_load
 
 void drawPortal()
 {
@@ -527,19 +550,19 @@ void keyPressed()
         {
           case 0:
           {
-            player = new Kicker('w', 's', 'a', 'd', 'c', 'K', #0DBC20);
-            level_count = 3;
+            player = new Kicker('w', 's', 'a', 'd', 'c', 'K', #0DBC20, 0, 1, 'e');
+            level_count++;
             break;
           }//end case
           case 1:
           {
-            player = new Blocker('w', 's', 'a', 'd', 'c', 'B', #0064FF);
+            player = new Blocker('w', 's', 'a', 'd', 'c', 'B', #0064FF, 0, 1, 'e');
             level_count++;
             break;
           }//end case
           case 2:
           {
-            player = new Destroyer('w', 's', 'a', 'd', 'c', 'D', #D80726);
+            player = new Destroyer('w', 's', 'a', 'd', 'c', 'D', #D80726, 0, 1, 'e');
             level_count++;
             break;
           }//end case

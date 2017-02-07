@@ -8,6 +8,12 @@ class Brick
     this.y = row.getInt(1);
   }//end Brick
   
+  Brick(int x, int y)
+  {
+    this.x = x;
+    this.y = y;
+  }//end Brick
+  
   void render()
   {
     for(int i = 0; i < 5; i++)

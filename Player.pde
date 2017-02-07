@@ -1,9 +1,10 @@
 abstract class Player
 { 
-  char up, down, left, right, bomb, initial;
+  int xdir, ydir;
+  char up, down, left, right, bomb, initial, power;
   color body;
   
-  Player(char up, char down, char left, char right, char bomb, char initial, color body)
+  Player(char up, char down, char left, char right, char bomb, char initial, color body, int xdir, int ydir, char power)
   {
     this.left = left;
     this.right = right;
@@ -12,6 +13,9 @@ abstract class Player
     this.bomb = bomb;
     this.initial = initial;
     this.body = body;
+    this.xdir = xdir;
+    this.ydir = ydir;
+    this.power = power;
   }//end constructor
  
   void render(float x, float y, float size)
@@ -40,6 +44,8 @@ abstract class Player
   {
     if(k == up)
     {
+      xdir = 0;
+      ydir = -1;
       if(level[player_x][player_y - 1])
       {
         player_y -= 1;
@@ -47,6 +53,8 @@ abstract class Player
     }//end if
     else if(k == left)
     {
+      xdir = -1;
+      ydir = 0;
       if(level[player_x - 1][player_y])
       {
         player_x -= 1;
@@ -54,6 +62,8 @@ abstract class Player
     }//end if
     else if(k == down)
     {
+      xdir = 0;
+      ydir = 1;
       if(level[player_x][player_y + 1])
       {
         player_y += 1;
@@ -61,9 +71,19 @@ abstract class Player
     }//end if
     else if(k == right)
     {
+      xdir = 1;
+      ydir = 0;
       if(level[player_x + 1][player_y])
       {
         player_x += 1;
+      }//end if
+    }//end if
+    else if(k == power)
+    {
+      if(cooldown == -1)
+      {
+        ability();
+        cooldown = millis();
       }//end if
     }//end if
     else if(k == bomb)

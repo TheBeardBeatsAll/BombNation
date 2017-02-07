@@ -35,6 +35,7 @@ class Bomb
     else if(time >= 3 && time < 4)
     {
       explode[i] = true;
+      destroy = true;
     }//end if
     else
     {
