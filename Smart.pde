@@ -39,32 +39,42 @@ class Smart extends Enemy
       {
         x_dir = -x_dir;
       }//end if
-      else if(level[x][y - 1] == false)
+      else if(level[x][y - 1] == false && level[x][y + 1] == true)
       {
         y_dir = 1;
         x_dir = 0;
       }//end else if
-      else if(level[x][y + 1] == false)
+      else if(level[x][y + 1] == false && level[x][y - 1] == true)
       {
         x_dir = 0;
         y_dir = -1;
       }//end else if
+      else if(level[x][y + 1] == true && level[x][y - 1] == true)
+      {
+        x_dir = 0;
+        y_dir = -1;
+      }//end if
     }//end if
     else if(level[x][y + y_dir] == false && y_dir != 0)
     {
-      if(level[x - 1][y] == false && level[x - 1][y] == false)
+      if(level[x - 1][y] == false && level[x + 1][y] == false)
       {
         y_dir = -y_dir;
       }//end if
-      else if(level[x - 1][y] == false)
+      else if(level[x - 1][y] == false && level[x + 1][y] == true)
       {
         y_dir = 0;
         x_dir = 1;
       }//end if
-      else if(level[x + 1][y] == false)
+      else if(level[x + 1][y] == false && level[x - 1][y] == true)
       {
-        y_dir = -1;
-        x_dir = 0;
+        y_dir = 0;
+        x_dir = -1;
+      }//end if
+      else if(level[x + 1][y] == true && level[x - 1][y] == true)
+      {
+        x_dir = 1;
+        y_dir = 0;
       }//end if
     }//end else if
     x += x_dir;

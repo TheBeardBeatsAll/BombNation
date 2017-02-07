@@ -1,7 +1,13 @@
 void setup()
 {
   fullScreen();
-  initialise();
+  level_count = 0;
+  level_timer = 240;
+  block_num = 15;
+  border = (width - height)/2;
+  block = height / block_num;
+  menu_choice = 1;
+  robot_choice = 0;
 }//end setup
 
 float border, level_timer, level_time_start;
@@ -33,27 +39,15 @@ void initialise()
   {
     explode[i] = false;  
   }//end for
-  
-  level_count = 0;
-  level_timer = 240;
-  
-  block_num = 15;
-  border = (width - height)/2;
-  block = height / block_num;
-  
   bomb_power = 2;
   bomb_count = 1;
   max_bomb = 5;
   loader = button = true;
   destroy = false;
   brick_x = brick_y = 0;
-  
   player_time = 0;
   player_score = 0;
-  menu_choice = 1;
   cooldown = -1;
-  
-  robot_choice = 0;
   player_lives = 5;
   player_x = player_y = 1;
 }//end initialise
@@ -78,7 +72,11 @@ void draw()
       textBox(-border/4, -border/4);
       fill(#59BCAE);
       rect(width * 0.1, height * 0.215, width * 0.75, height * 0.3);
+      fill(0);
+      rect(width * 0.2, height * 0.23, width * 0.2, height * 0.27);
       fill(200);
+      textSize(18);
+      text("Move using w,a,s & d keys\nPlant a bomb: c\nUse robot ability: e\nExit to main menu: g", width * 0.2, height * 0.23, width * 0.2, height * 0.27);
       textSize(40);
       text("How To Play", width/2, height/8);
       textSize(24);
@@ -146,6 +144,7 @@ void draw()
       {
         case 0:
         {
+          initialise();
           textBox(0, -border/8);
           textSize(30);
           text("Choose a Robot Class:", width/2, height/7);
@@ -430,14 +429,15 @@ void drawLevel()
     {
       bombs.remove(bm);
     }//end if
-    popMatrix();
     if(explode[i])
     {
-      explosion(-1, 0, bm.x, bm.y);
-      explosion(0, -1, bm.x, bm.y);
-      explosion(1, 0, bm.x, bm.y);
       explosion(0, 1, bm.x, bm.y);
+      explosion(-1, 0, bm.x, bm.y);
+      explosion(1, 0, bm.x, bm.y);
+      
+      explosion(0, -1, bm.x, bm.y);
     }//end if
+    popMatrix();
   }//for
   
   drawPortal();
@@ -457,7 +457,6 @@ void drawLevel()
     translate(b.x * block, b.y * block);
     b.render();
     
-   
     if(b.x == brick_x && b.y == brick_y)
     {
       if(destroy)
@@ -488,10 +487,7 @@ void drawLevel()
     }//end if
     if(player_x == e.x && player_y == e.y)
     {
-      player_lives--;
-      bomb_power = 2;
-      bomb_count = 1;
-      player_x = player_y = 1;
+      playerDeath();
     }//end if
   }//end for
   
@@ -509,6 +505,14 @@ void drawLevel()
     }//end if
   }//end if
 }//end drawLevel
+
+void playerDeath()
+{
+  player_lives--;
+  bomb_power = 2;
+  bomb_count = 1;
+  player_x = player_y = 1;
+}//end playerDeath
 
 void drawWall()
 {
@@ -544,19 +548,19 @@ void explosion(int l, int k, int x, int y)
 {
   int n, j;
   fill(#BF4C04);
-  rect(x * block, y * block, block, block);
+  rect(0, 0, block, block);
   ellipseMode(CENTER);
   fill(#E0B400);
-  arc(x * block, y * block, block/2, block/2, 0, HALF_PI);
-  arc((x + 1) * block, y * block, block/2, block/2, HALF_PI, PI);
-  arc(x * block, (y + 1) * block, block/2, block/2, PI + HALF_PI, TWO_PI);
-  arc((x + 1) * block, (y + 1) * block, block/2, block/2, PI, PI + HALF_PI);
+  arc(0, 0, block/2, block/2, 0, HALF_PI);
+  arc(block, 0, block/2, block/2, HALF_PI, PI);
+  arc(0, block, block/2, block/2, PI + HALF_PI, TWO_PI);
+  arc(block, block, block/2, block/2, PI, PI + HALF_PI);
   
   fill(#59BCAE);
-  arc(x * block, y * block, block/4, block/4, 0, HALF_PI);
-  arc((x + 1) * block, y * block, block/4, block/4, HALF_PI, PI);
-  arc(x * block, (y + 1) * block, block/4, block/4, PI + HALF_PI, TWO_PI);
-  arc((x + 1) * block, (y + 1) * block, block/4, block/4, PI, PI + HALF_PI);
+  arc(0, 0, block/4, block/4, 0, HALF_PI);
+  arc(block, 0, block/4, block/4, HALF_PI, PI);
+  arc(0, block, block/4, block/4, PI + HALF_PI, TWO_PI);
+  arc(block, block, block/4, block/4, PI, PI + HALF_PI);
   for(int i = 1; i < bomb_power; i++)
   {
     if(!level[x + (l * i)][y + (k * i)])
@@ -576,7 +580,7 @@ void explosion(int l, int k, int x, int y)
       j = 0;
     }//end else
     pushMatrix();
-    translate((x + (l * i)) * block, (y + (k * i)) * block);
+    translate((l * i) * block, (k * i) * block);
     if(i  == bomb_power - 1)
     {
       pushMatrix();
@@ -606,10 +610,7 @@ void explosion(int l, int k, int x, int y)
     if((player_x == (x + (l * i)) && player_y == (y + (k * i))) ||
     (player_x == x && player_y == y))
     {
-      player_x = player_y = 1;
-      bomb_power = 2;
-      bomb_count = 1;
-      player_lives--;
+      playerDeath();
     }//end if
     for (int m = enemies.size() - 1; m >= 0; m--)
     {
@@ -668,7 +669,7 @@ void keyPressed()
           case 0:
           {
             player = new Kicker('w', 's', 'a', 'd', 'c', 'K', #0DBC20, 0, 1, 'e');
-            level_count++;
+            level_count = 3;
             break;
           }//end case
           case 1:
@@ -690,10 +691,7 @@ void keyPressed()
     {
       if(key == 'g')
       {
-        menu_choice = 1;
-        level_count = 0;
-        player_x = player_y = 1;
-        player_lives = 5;
+        reset();
       }//end if
       if(button)
       {
@@ -711,10 +709,16 @@ void keyPressed()
     }//end else if
     else if( level_count == 4 || level_count == 5)
     {
-      menu_choice = 1;
-      level_count = 0;
-      player_x = player_y = 1;
-      player_lives = 5;
+      reset();
     }//end else if
   }//end else if
 }//end keyPressed
+
+void reset()
+{
+  menu_choice = 1;
+  level_count = 0;
+  robot_choice = 0;
+  player_x = player_y = 1;
+  player_lives = 5;
+}//end reset
