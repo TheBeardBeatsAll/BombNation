@@ -79,12 +79,43 @@ void draw()
       textSize(40);
       text("How To Play", width/2, height/8);
       textSize(24);
-      text("Player Robots", width * 3/16, height * 3/16);
+      text("Player Robots", width * 5/32, height * 3/16);
       text("Blocks", width * 8/16, height * 3/16);
       text("Enemies", width * 11/16, height * 3/16);
       text("Power Ups", width * 13/16, height * 3/16);
+      Player pl = new Kicker('w', 's', 'a', 'd', 'c', 'K', #0DBC20, 0, 1, 'e');
+      pl.render(3, 3.5, 0);
+      pl = new Blocker('w', 's', 'a', 'd', 'c', 'B', #0064FF, 0, 1, 'e');
+      pl.render(3, 5, 0);
+      pl = new Destroyer('w', 's', 'a', 'd', 'c', 'D', #D80726, 0, 1, 'e');
+      pl.render(3, 6.5, 0);
       
+      pushMatrix();
+      //translate();
+      Bomb b = new Bomb(1, 1, 1);
+      b.renderTick();
+      b.renderTock();
       
+      translate(width * 0.665, height * 0.225);
+      Enemy e = new Enemy(1, 1);
+      e.render();
+      translate(0, height * 0.1);
+      e = new Smart(1, 1);
+      e.render();
+      translate(0, height * 0.1);
+      e = new Tough(1, 1);
+      e.render();
+      
+      translate(width * 0.12, 0);
+      Pbomb p = new Pbomb(1, 1);
+      p.render();
+      translate(0, -height * 0.1);
+      p = new Pboom(1, 1);
+      p.render();
+      translate(0, -height * 0.1);
+      p = new Pscore(1, 1);
+      p.render();
+      popMatrix();
       menu();
       break;
     }//end case
@@ -106,11 +137,11 @@ void draw()
           textSize(30);
           text("Choose a Robot Class:", width/2, height/7);
           player = new Kicker('w', 's', 'a', 'd', 'c', 'K', #0DBC20, 0, 1, 'e');
-          player.render(player_x + 3, player_y + 3, 2);
+          player.render(4, 4, 2);
           player = new Blocker('w', 's', 'a', 'd', 'c', 'B', #0064FF, 0, 1, 'e');
-          player.render(player_x + 9.5, player_y + 3, 2);
+          player.render(10.5, 4, 2);
           player = new Destroyer('w', 's', 'a', 'd', 'c', 'D', #D80726, 0, 1, 'e');
-          player.render(player_x + 16, player_y + 3, 2);
+          player.render(17, 4, 2);
           fill(200);
           textSize(24);
           textAlign(LEFT, CENTER);
@@ -389,10 +420,13 @@ void drawLevel()
   for(int i = bombs.size() - 1; i >= 0; i--)
   {
     Bomb bm = bombs.get(i);
+    pushMatrix();
+    translate(bm.x * block, bm.y * block);
     if(bm.render(i))
     {
       bombs.remove(bm);
     }//end if
+    popMatrix();
     if(explode[i])
     {
       explosion(-1, 0, bm.x, bm.y);
@@ -401,6 +435,7 @@ void drawLevel()
       explosion(0, 1, bm.x, bm.y);
     }//end if
   }//for
+  
   for (int i = bricks.size() - 1; i >= 0; i--)
   {
     Brick b = bricks.get(i);
@@ -424,7 +459,10 @@ void drawLevel()
   for (int i = powerups.size() - 1; i >= 0; i--)
   {
     Pbomb p = powerups.get(i);
+    pushMatrix();
+    translate(p.x * block, p.y * block);
     p.render();
+    popMatrix();
   }//end for
   
   for (int i = enemies.size() - 1; i >= 0; i--)

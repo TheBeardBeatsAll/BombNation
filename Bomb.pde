@@ -10,27 +10,37 @@ class Bomb
     this.t = t;
   }//end Bomb
   
+  void renderTick()
+  {
+    fill(125);
+    rect(0.55 * block, 0.1 * block, block * 0.2, block * 0.4);
+    fill(0);
+    ellipse(0.25 * block, 0.25 * block, block, block);
+    fill(255);
+    ellipse(0.35 * block, 0.65 * block, 0.55 * block, 0.85 * block);
+  }//end renderStatic
+  
+  void renderTock()
+  {
+    fill(125);
+    rect(0.45 * block, 0, block * 0.2, block * 0.4);
+    fill(#B71611);
+    ellipse(0.125 * block, 0.125 * block, block, block);
+    fill(255);
+    ellipse(0.225 * block, 0.525 * block, 0.55 * block, 0.85 * block);
+  }//end renderTock
+ 
   boolean render(int i)
   {
     float time = ((millis() - t) / 1000); 
     ellipseMode(CORNERS);
     if(time < 0.5 || (time >= 1 && time < 1.5) || (time >= 2 && time < 2.5))
     {
-      fill(125);
-      rect((x + 0.55) * block, (y + 0.1) * block, block * 0.2, block * 0.4);
-      fill(0);
-      ellipse((x + 0.25) * block, (y + 0.25) * block, (x + 1) * block, (y + 1) * block);
-      fill(255);
-      ellipse((x + 0.35) * block, (y + 0.65) * block, (x + 0.55) * block, (y + 0.85) * block);
+      renderTick();
     }//end if
     else if((time >= 0.5 && time < 1) || (time >= 1.5 && time < 2) || (time >= 2.5 && time < 3))
     {
-      fill(125);
-      rect((x + 0.45) * block, y * block, block * 0.2, block * 0.4);
-      fill(#B71611);
-      ellipse((x + 0.125) * block, (y + 0.125) * block, (x + 1) * block, (y + 1) * block);
-      fill(255);
-      ellipse((x + 0.225) * block, (y + 0.525) * block, (x + 0.55) * block, (y + 0.85) * block);
+      renderTock();
     }//end else if
     else if(time >= 3 && time < 4)
     {

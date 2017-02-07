@@ -17,10 +17,10 @@ class Pbomb
   void render()
   {
     fill(#5BF559);
-    rect(x * block, y * block, block, block);
+    rect(0, 0, block, block);
     fill(0);
     textSize(12);
     textAlign(CENTER, CENTER);
-    text("MORE\nBOMBS",  x * block + block/2, y * block + block/2);
+    text("MORE\nBOMBS", block/2, block/2);
   }//end render
 }//end Pbomb
