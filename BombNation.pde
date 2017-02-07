@@ -25,6 +25,7 @@ Player player;
 ArrayList<Brick> bricks = new ArrayList<Brick>();
 ArrayList<Bomb> bombs = new ArrayList<Bomb>();
 ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+ArrayList<Pbomb> powerups = new ArrayList<Pbomb>();
 
 void initialise()
 {
@@ -73,7 +74,8 @@ void draw()
       break;
     }//end case
     case 2:
-    {
+    { 
+      textBox(-border/4, -border/4);
       menu();
       break;
     }//end case
@@ -106,10 +108,10 @@ void draw()
           text("Kicker", border * 5/6, border * 7/12);
           text("Blocker", border * 23/12, border * 7/12);
           text("Destroyer", border * 3, border * 7/12);
-          textSize(12);
-          //text("", border * 5/6, border * 7/12);
-          //text("", border * 23/12, border * 7/12);
-          //text("", border * 3, border * 7/12);
+          textSize(20);
+          text("Can kick a bomb away", border * 1.25, border * 0.75, border * 0.3, border * 0.3);
+          text("Can create a block of bricks", border * 2.4, border * 0.75, border * 0.3, border * 0.4);
+          text("Can destroy a block of bricks", border * 3.45, border * 0.75, border * 0.3, border * 0.4);
           triangle((border * 5.1/6) + (robot_choice * border * 1.11), border * 1.35, 
           (border * 5.6/6) + (robot_choice * border * 1.11), border * 1.25, 
           (border * 6.1/6) + (robot_choice * border * 1.11), border * 1.35);
@@ -242,6 +244,22 @@ void level_load()
     }//end else if
     enemies.add(e);
   }//end for
+  
+  t = loadTable("power" + level_count + ".csv", "csv");
+  for(TableRow row : t.rows())
+  {
+    Pbomb p = new Pbomb(row);
+    //if(p.type == 2)
+    //{
+    //  p = new Pboom(row);
+    //}//end if
+    //else if(e.type == 3)
+    //{
+    //  P = new Pscore(row);
+    //}//end else if
+    powerups.add(p);
+  }//end for
+  
   for(int i = 0; i < enemy_timer.length; i++)
   {
     enemy_timer[i] = millis();
@@ -371,6 +389,12 @@ void drawLevel()
         brick_x = brick_y = 0;
       }//end if
     }//end if
+  }//end for
+  
+  for (int i = powerups.size() - 1; i >= 0; i--)
+  {
+    Pbomb p = powerups.get(i);
+    p.render();
   }//end for
   
   for (int i = enemies.size() - 1; i >= 0; i--)
