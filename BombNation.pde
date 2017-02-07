@@ -16,9 +16,9 @@ float[] enemy_timer = new float[10];
 float block, block_num, player_button;
 
 int secs_left, player_time, robot_choice;
-int player_x, player_y, player_lives;
+int player_x, player_y, player_lives, level_count;
 int bomb_count, max_bomb, bomb_power;
-int brick_x, brick_y, level_count;
+int[][] brick_xy = new int[4][2];
 int portal_x, portal_y, menu_choice, player_score;
 
 boolean check_b, loader, button, destroy;
@@ -39,12 +39,19 @@ void initialise()
   {
     explode[i] = false;  
   }//end for
+  for(int i = 0; i < 4; i++)
+  {
+    for(int j = 0; j < 2; j++)
+    {
+      brick_xy[i][j] = 0; 
+    }//end for
+  }//end for 
+  
   bomb_power = 2;
   bomb_count = 1;
   max_bomb = 5;
   loader = button = true;
   destroy = false;
-  brick_x = brick_y = 0;
   player_time = 0;
   player_score = 0;
   cooldown = -1;
@@ -431,11 +438,10 @@ void drawLevel()
     }//end if
     if(explode[i])
     {
+      explosion(0, -1, bm.x, bm.y);
       explosion(0, 1, bm.x, bm.y);
       explosion(-1, 0, bm.x, bm.y);
       explosion(1, 0, bm.x, bm.y);
-      
-      explosion(0, -1, bm.x, bm.y);
     }//end if
     popMatrix();
   }//for
@@ -457,19 +463,22 @@ void drawLevel()
     translate(b.x * block, b.y * block);
     b.render();
     
-    if(b.x == brick_x && b.y == brick_y)
+    for(int j = 0; j < 4; j++)
     {
-      if(destroy)
+      if(b.x == brick_xy[j][0] && b.y == brick_xy[j][1])
       {
-        b.destroy();
+        if(destroy)
+        {
+          b.destroy();
+        }//end if
+        else
+        {
+          level[b.x][b.y] = true;
+          bricks.remove(i);
+          brick_xy[j][0] = brick_xy[j][1] = 0;
+        }//end else
       }//end if
-      else
-      {
-        level[b.x][b.y] = true;
-        bricks.remove(i);
-        brick_x = brick_y = 0;
-      }//end if
-    }//end if
+    }//end for
     popMatrix();
   }//end for
   
@@ -565,8 +574,26 @@ void explosion(int l, int k, int x, int y)
   {
     if(!level[x + (l * i)][y + (k * i)])
     {
-      brick_x = x + (l * i);
-      brick_y = y + (k * i);
+      if(l == 1)
+      {
+        brick_xy[0][0] = x + (l * i);
+        brick_xy[0][1] = y + (k * i);
+      }//end if
+      else if(l == -1)
+      {
+        brick_xy[1][0] = x + (l * i);
+        brick_xy[1][1] = y + (k * i);
+      }//end else if
+      else if(k == 1)
+      {
+        brick_xy[2][0] = x + (l * i);
+        brick_xy[2][1] = y + (k * i);
+      }//end else if
+      else if(k == -1)
+      {
+        brick_xy[3][0] = x + (l * i);
+        brick_xy[3][1] = y + (k * i);
+      }//end else if
       return;
     }//end if
     if(l == 1 || l == -1)
@@ -669,7 +696,7 @@ void keyPressed()
           case 0:
           {
             player = new Kicker('w', 's', 'a', 'd', 'c', 'K', #0DBC20, 0, 1, 'e');
-            level_count = 3;
+            level_count++;
             break;
           }//end case
           case 1:

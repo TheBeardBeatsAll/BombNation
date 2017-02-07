@@ -14,7 +14,10 @@ class Destroyer extends Player
         Brick b = bricks.get(i);
         if(b.x == player_x + xdir && b.y == player_y + ydir)
         {
+          pushMatrix();
+          translate(b.x * block, b.y * block);
           b.destroy();
+          popMatrix();
           bricks.remove(b);
           level[b.x][b.y] = true;
         }//end if
