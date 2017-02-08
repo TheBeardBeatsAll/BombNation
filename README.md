@@ -15,4 +15,4 @@ or enemies that get caught in the explosion.
 
 The parts of this I am proudest off are all the mechanics behind the game ie movement and the bombs.
 
-[![Video](https://i.gyazo.com/11f6551d813fb11067ab928c3ac4d9bf.png)](https://www.youtube.com/watch?v=sq70u0WMlNk)
+[![Video](https://i.gyazo.com/ae8549a81f33e6f995d9257714cfebc8.png)](https://www.youtube.com/watch?v=OW6_nz342Cc)

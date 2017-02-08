@@ -56,7 +56,7 @@ void initialise()
     enemy_death[i] = -1;
   }//end for 
   bomb_power = 2;
-  bomb_count = 4;
+  bomb_count = 1;
   max_bomb = 5;
   loader = button = true;
   destroy = false;
@@ -273,6 +273,7 @@ void level_load()
 {
   bricks.clear();
   enemies.clear();
+  powerups.clear();
   
   for(int i = 0; i < 15 ; i++)
   {
@@ -551,7 +552,7 @@ void drawEnemies()
         player_score += e.score;
         enemies.remove(i);
       }//end if
-      else
+      else if(e.type == 2)
       {
         fill(#AD9E1C);
         rect((e.x + 0.1) * block, (e.y - 0.2) * block, block * 0.8, block * 0.1);
