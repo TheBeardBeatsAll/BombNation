@@ -20,6 +20,7 @@ class Enemy
     this.y = y;
   }
   
+  //visual for basic enemy
   void render()
   {
     fill(#115AB7);
@@ -32,6 +33,8 @@ class Enemy
     ellipse(block/2, block/2, block/4, block/4);
   }//end render
   
+  //movement update for basic enemy & tough enemy
+  //will turn around if a block or bomb is in front of it
   void update()
   {
     if(level[x + x_dir][y] == false && x_dir != 0)

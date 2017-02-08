@@ -14,6 +14,7 @@ class Pbomb
     this.y = y;
   }//end Brick
   
+  //visual for bomb powerup
   void render()
   {
     fill(#5BF559);

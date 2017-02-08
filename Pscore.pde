@@ -10,6 +10,7 @@ class Pscore extends Pbomb
     super(x, y);
   }//end Brick
   
+  //visual for score powerup
   void render()
   {
     fill(#5BF559);

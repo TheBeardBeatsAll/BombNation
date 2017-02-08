@@ -14,6 +14,7 @@ class Brick
     this.y = y;
   }//end Brick
   
+  //visual for brick
   void render()
   {
     for(int i = 0; i < 5; i++)
@@ -35,6 +36,7 @@ class Brick
     }//end for
   }//end render
   
+  //visual for brick as its being destroyed
   void destroy()
   {
     fill(#E9FF00);

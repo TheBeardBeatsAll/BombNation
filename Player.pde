@@ -18,6 +18,7 @@ abstract class Player
     this.power = power;
   }//end constructor
  
+ //visual for player robots
   void render(float x, float y, float size)
   {
     fill(255);
@@ -40,6 +41,7 @@ abstract class Player
 
   abstract void ability();
 
+  //keys for players including movement, power and bomb
   boolean update(char k)
   {
     if(k == up)

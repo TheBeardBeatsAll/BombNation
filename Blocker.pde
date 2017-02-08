@@ -5,6 +5,7 @@ class Blocker extends Player
     super(up, down, left, right, bomb, initial, body, xdir, ydir, power);
   }//end constructor
    
+  //creates a block of bricks beside the player in the direction it is facing
   void ability()
   {
     if(level[player_x + xdir][player_y + ydir])

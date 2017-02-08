@@ -1,5 +1,6 @@
 void setup()
 {
+  //intialise as fullscreen and all starting variables
   fullScreen();
   level_count = 0;
   level_timer = 240;
@@ -10,6 +11,7 @@ void setup()
   robot_choice = 0;
 }//end setup
 
+//declare all global variables used
 float border, level_timer, level_time_start;
 float bomb_timer, cooldown, player_death;
 float[] enemy_timer = new float[10];
@@ -34,6 +36,7 @@ ArrayList<Bomb> bombs = new ArrayList<Bomb>();
 ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 ArrayList<Pbomb> powerups = new ArrayList<Pbomb>();
 
+//initialise all variables at the start of each level
 void initialise()
 {
   for(int i = 0; i < explode.length; i++)
@@ -70,10 +73,12 @@ void initialise()
 void draw()
 {
   background(0);
+  //menu visuals
   switch(menu_choice)
   {
     case 1:
     {
+      //to play screen
       textBox(0, 0);
       textSize(140);
       text("BombNation", width/2, height/4 + border/8);
@@ -84,6 +89,7 @@ void draw()
     }//end case
     case 2:
     { 
+      //instructions screen
       textBox(-border/4, -border/4);
       fill(#59BCAE);
       rect(width * 0.1, height * 0.215, width * 0.75, height * 0.3);
@@ -147,6 +153,7 @@ void draw()
     }//end case
     case 3:
     {
+      //exit screen
       textBox(border/2, border/3);
       textSize(40);
       text("Press Enter to exit", width/2, height/4 + border * 3/8);
@@ -155,10 +162,12 @@ void draw()
     }//end case
     case 4:
     {
+      //levels and victory/game over screens
       switch(level_count)
       {
         case 0:
         {
+          //choose your robot screen
           initialise();
           textBox(0, -border/8);
           textSize(30);
@@ -186,6 +195,7 @@ void draw()
         }//end case
         case 1:
         {
+          //level 1 screen
           portal_x = 7;
           portal_y = 11;
           level();
@@ -193,6 +203,7 @@ void draw()
         }//end case
         case 2:
         {
+          //level 2 screen
           portal_x = 13;
           portal_y = 4;
           level();
@@ -200,6 +211,7 @@ void draw()
         }//end case
         case 3:
         {
+          //level 3 screen
           portal_x = 9;
           portal_y = 8;
           level();
@@ -207,6 +219,7 @@ void draw()
         }//end case
         case 4:
         {
+          //victory screen
           int mins = player_time/60;
           int secs = (player_time % 60);
           textBox(border/8, 0);
@@ -218,6 +231,7 @@ void draw()
         }//end case
         case 5:
         {
+          //game over screen
           textBox(border/8, 0);
           textSize(30);
           text("GAME OVER\nYour Score is " + player_score
@@ -233,6 +247,7 @@ void draw()
 
 void textBox(float o, float p)
 {
+  //boxes used in main menu screens
   fill(200);
   rect(border/2 + o, border/4 + p, width - (border + (2 * o)), height/2 - p, 50);
   fill(0);
@@ -243,6 +258,7 @@ void textBox(float o, float p)
 
 void menu()
 {
+  //menu selection visuals
   fill(200);
   triangle(width/2 - (block * 2), (height * 5)/8 + (menu_choice * block), 
   width/2 - (block * 2), (height * 5)/8 + (block * 1/3) + (menu_choice * block), 
@@ -256,6 +272,7 @@ void menu()
 
 void level()
 {
+  //all parts for a level, level is loaded only at the start
   background(0);
   translate(border, 0);
   sideBars();
@@ -269,12 +286,14 @@ void level()
   checkPlayer();
 }//end level
 
+//loads info for level only once at the start
 void level_load()
 {
   bricks.clear();
   enemies.clear();
   powerups.clear();
   
+  //set grid coords to true or false
   for(int i = 0; i < 15 ; i++)
   {
     for(int j = 0; j < 15; j++)
@@ -290,6 +309,7 @@ void level_load()
     }//end for
   }//end for
   
+  //load in bricks, enemies and power ups and set brick coord to false
   t = loadTable("brick" + level_count + ".csv", "csv");
   for(TableRow row : t.rows())
   {
@@ -328,6 +348,7 @@ void level_load()
     powerups.add(p);
   }//end for
   
+  //start timers for enemies,player key and level timer
   for(int i = 0; i < enemy_timer.length; i++)
   {
     enemy_timer[i] = millis();
@@ -341,6 +362,7 @@ void level_load()
   loader = false;
 }//end level_load
 
+//draw side info for level: score, timer, lives, ability ready
 void sideBars()
 {
   float check = (millis() - level_time_start) / 1000;
@@ -371,20 +393,24 @@ void sideBars()
     player.render(15.3 + (i * 1.1), 2.75, 0);
   }//end for
   
+  //if time runs out game over
   if(secs_left == 0)
   {
     level_count = 5;
   }//end if
 }//end sideBars
 
+//draw player and do checks
 void checkPlayer()
 {
   player.render(player_x, player_y, 0);
+  //if no more lives game over
   if(player_lives == 0)
   {
     level_count = 5;
   }//end if
   
+  //if player goes into portal go to next level
   if(player_x == portal_x && player_y == portal_y)
   {
     level_count++;
@@ -394,6 +420,7 @@ void checkPlayer()
     loader = true;
   }//end if
   
+  //if player picks up powerups implement them
   for (int i = powerups.size() - 1; i >= 0; i--)
   {
     Pbomb p = powerups.get(i);
@@ -415,6 +442,7 @@ void checkPlayer()
     }//end if
   }//end for
   
+  //if player dies they are invulnerable for 2 secs
   if(player_death != -1)
   {
     fill(#AD9E1C);
@@ -424,8 +452,23 @@ void checkPlayer()
       player_death = -1;
     }//end if
   }//end if
+  //player can do actions every 0.25 secs
+  if(millis() - player_button > 250)
+  {
+    button = true;
+    player_button = millis();
+  }//end if 
+  //ability cooldown is 10 secs
+  if(cooldown != -1)
+  {
+    if((millis() - cooldown) / 1000 >= 10)
+    {
+      cooldown = -1;
+    }//end if
+  }//end if
 }//end checkPlayer
 
+//draw the level
 void drawLevel()
 {
   drawBlocks();
@@ -434,20 +477,9 @@ void drawLevel()
   drawPowerups();
   drawBricks();
   drawEnemies();
-  if(millis() - player_button > 250)
-  {
-    button = true;
-    player_button = millis();
-  }//end if 
-  if(cooldown != -1)
-  {
-    if((millis() - cooldown) / 1000 >= 10)
-    {
-      cooldown = -1;
-    }//end if
-  }//end if
 }//end drawLevel
 
+//draw the walls and floor patterns
 void drawBlocks()
 {
   for(int i = 0; i < 15 ; i++)
@@ -469,6 +501,7 @@ void drawBlocks()
   }//end for
 }//end drawBlocks
 
+//draw the bombs and then each explosions
 void drawBombs()
 {
   for(int i = bombs.size() - 1; i >= 0; i--)
@@ -491,6 +524,7 @@ void drawBombs()
   }//for
 }//end drawBombs
 
+//draw the bricks and if they get blown up their destruction visual then remove them
 void drawBricks()
 {
   for (int i = bricks.size() - 1; i >= 0; i--)
@@ -520,6 +554,7 @@ void drawBricks()
   }//end for
 }//end void drawBricks
 
+//draw enemies
 void drawEnemies()
 {
   for (int i = enemies.size() - 1; i >= 0; i--)
@@ -529,15 +564,19 @@ void drawEnemies()
     translate(e.x * block, e.y * block);
     e.render();
     popMatrix();
+    //update enemies ever 1 sec
     if((millis() - enemy_timer[i]) >= 1000)
     {
       e.update();
       enemy_timer[i] = millis();
     }//end if
+    //if player runs into enemy player dies
     if(player_x == e.x && player_y == e.y)
     {
       playerDeath();
     }//end if
+    //if enemy loses a life it is destroyed if lives = 0
+    //or it is invulnerable for 2 secs
     if(enemy_death[i] != -1)
     {
       if(e.lives <= 0)
@@ -565,6 +604,7 @@ void drawEnemies()
   }//end for
 }//end drawEnemies
 
+//draw power ups
 void drawPowerups()
 {
   for (int i = powerups.size() - 1; i >= 0; i--)
@@ -577,6 +617,8 @@ void drawPowerups()
   }//end for
 }//end drawPowerups
 
+//what happens when a player dies ie reset to spawn
+//with 1 bomb and basic power
 void playerDeath()
 {
   if(player_death == -1)
@@ -589,6 +631,7 @@ void playerDeath()
   }//end if
 }//end playerDeath
 
+//draw the wall sections
 void drawWall()
 {
   stroke(0);
@@ -600,6 +643,7 @@ void drawWall()
   rect(block/3, block/3, block - (block * 2/3), block - (block * 2/3));
 }//end drawWall
 
+//draw the floor patterns
 void drawFloor()
 {
   fill(#278945);
@@ -611,6 +655,7 @@ void drawFloor()
   rect(block * 11/16, block * 7/16, block * 3/16, block/8);
 }//end drawFloor
 
+//draw portal
 void drawPortal()
 {
   fill(0);
@@ -619,8 +664,10 @@ void drawPortal()
   rect(portal_x * block + block/6, portal_y * block + block/6, block - block/3, block - block/3);
 }//end drawPortal
 
+//draw explosions and check does it destroy anything
 void explosion(int l, int k, int x, int y)
 {
+  //draw center part of explosion
   int n, j;
   fill(#BF4C04);
   rect(0, 0, block, block);
@@ -638,6 +685,7 @@ void explosion(int l, int k, int x, int y)
   arc(block, block, block/4, block/4, PI, PI + HALF_PI);
   for(int i = 1; i < bomb_power; i++)
   {
+    //pass on coords above,below,left and right if brick gets blown up
     if(!level[x + (l * i)][y + (k * i)])
     {
       if(l == 1)
@@ -674,6 +722,7 @@ void explosion(int l, int k, int x, int y)
     }//end else
     pushMatrix();
     translate((l * i) * block, (k * i) * block);
+    //draw end part of explosion
     if(i  == bomb_power - 1)
     {
       pushMatrix();
@@ -694,17 +743,20 @@ void explosion(int l, int k, int x, int y)
     }//end if
     else
     {
+      //draw middle bits of explosioon
       fill(#E0B400);
       rect((block/8) * n,(block/8) * j, block - (block * 1/4 * n), block - (block * 1/4 * j));
       fill(#BF4C04);
       rect((block/4) * n,(block/4) * j, block - (block * 1/2 * n), block - (block * 1/2 * j));
     }//end else
     popMatrix();
+    //if player caught in explosion player dies
     if((player_x == (x + (l * i)) && player_y == (y + (k * i))) ||
     (player_x == x && player_y == y))
     {
       playerDeath();
     }//end if
+    //if enemy caught in explosion enemy loses a life
     for (int m = enemies.size() - 1; m >= 0; m--)
     {
       Enemy e = enemies.get(m);
@@ -721,8 +773,10 @@ void explosion(int l, int k, int x, int y)
   }//end for
 }//end explosion
 
+//key bindings
 void keyPressed()
 {
+  //menu movements
   if(menu_choice >= 1 && menu_choice <= 3)
   {
     if(key == 'w' && menu_choice > 1)
@@ -742,8 +796,10 @@ void keyPressed()
       menu_choice = 4;
     }//end else if
   }//end if
+  //in game movements
   else if(menu_choice == 4)
   {
+    //move between robots and select them
     if(level_count == 0)
     {
       if(key == 'a' && robot_choice > 0)
@@ -779,6 +835,8 @@ void keyPressed()
         }//end switch
       }//end else if
     }//end if
+    //in level, if g go to main menu
+    //o/w player key bindings
     else if(level_count >= 1 && level_count <= 3)
     {
       if(key == 'g')
@@ -787,7 +845,9 @@ void keyPressed()
       }//end if
       if(button)
       {
+        //player keys
         check_b = player.update(key);
+        //if bomb is placed
         if(check_b == true && bomb_count > 0)
         {
           bomb_timer = millis();
@@ -799,6 +859,7 @@ void keyPressed()
         button = false;
       }//end if
     }//end else if
+    //if on victory or game over screen hit any key to go to main menu
     else if( level_count == 4 || level_count == 5)
     {
       reset();
@@ -806,6 +867,7 @@ void keyPressed()
   }//end else if
 }//end keyPressed
 
+//variable reset to initial set up
 void reset()
 {
   menu_choice = 1;

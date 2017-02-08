@@ -9,7 +9,8 @@ class Tough extends Enemy
   {
     super(x, y);
   }
-  
+
+  //visuals for tough enemy
   void render()
   {
     fill(#903480);

@@ -10,6 +10,7 @@ class Pboom extends Pbomb
     super(x, y);
   }//end Brick
   
+  //visual for boom powerup
   void render()
   {
     fill(#5BF559);

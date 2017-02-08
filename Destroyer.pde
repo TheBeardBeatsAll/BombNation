@@ -5,6 +5,7 @@ class Destroyer extends Player
     super(up, down, left, right, bomb, initial, body, xdir, ydir, power);
   }//end constructor
   
+  //will destroy a block next to player in direction it is facing
   void ability()
   {
     if(!level[player_x + xdir][player_y + ydir])

@@ -10,6 +10,7 @@ class Bomb
     this.t = t;
   }//end Bomb
   
+  //visual for bomb
   void renderTick()
   {
     ellipseMode(CORNERS);
@@ -21,6 +22,7 @@ class Bomb
     ellipse(0.35 * block, 0.65 * block, 0.55 * block, 0.85 * block);
   }//end renderStatic
   
+  //visual for bomb after a tick
   void renderTock()
   {
     ellipseMode(CORNERS);
@@ -32,6 +34,8 @@ class Bomb
     ellipse(0.225 * block, 0.525 * block, 0.55 * block, 0.85 * block);
   }//end renderTock
  
+  //function for processing the bombs visual and locks for bomb space
+  //explosion space and when blocks around it get destroyed
   boolean render(int i)
   {
     float time = ((millis() - t) / 1000); 

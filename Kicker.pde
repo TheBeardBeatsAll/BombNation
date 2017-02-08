@@ -5,6 +5,8 @@ class Kicker extends Player
     super(up, down, left, right, bomb, initial, body, xdir, ydir, power);
   }//end constructor
   
+  //will kick a bomb in direction player is facing until it hits a 
+  //block or an enemy
   void ability()
   {
     if(!level[player_x + xdir][player_y + ydir])

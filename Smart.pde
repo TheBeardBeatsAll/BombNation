@@ -10,6 +10,7 @@ class Smart extends Enemy
     super(x, y);
   }
   
+  //visual for smart enemy
   void render()
   {
     fill(#DDFF08);
@@ -31,8 +32,11 @@ class Smart extends Enemy
     , (block * 15/24), (block * 3/4));
   }//end render
   
+  //movement change for enemy movement
   void update()
   {
+    //will turnaround if surrounded by blocks, turn left if no blocks on left and right or if block on right
+    //will turn right if block on left 
     if(level[x + x_dir][y] == false && x_dir != 0)
     {
       if(level[x][y + 1] == false && level[x][y - 1] == false)
