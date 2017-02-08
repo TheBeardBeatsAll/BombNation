@@ -11,8 +11,9 @@ void setup()
 }//end setup
 
 float border, level_timer, level_time_start;
-float bomb_timer, cooldown;
+float bomb_timer, cooldown, player_death;
 float[] enemy_timer = new float[10];
+float[] enemy_death = new float[10];
 float block, block_num, player_button;
 
 int secs_left, player_time, robot_choice;
@@ -46,15 +47,22 @@ void initialise()
       brick_xy[i][j] = 0; 
     }//end for
   }//end for 
-  
+  for(int i = 0; i < enemy_timer.length; i++)
+  {
+    enemy_timer[i] = 0;
+  }//end for 
+  for(int i = 0; i < enemy_death.length; i++)
+  {
+    enemy_death[i] = -1;
+  }//end for 
   bomb_power = 2;
-  bomb_count = 1;
+  bomb_count = 4;
   max_bomb = 5;
   loader = button = true;
   destroy = false;
   player_time = 0;
   player_score = 0;
-  cooldown = -1;
+  cooldown = player_death = -1;
   player_lives = 5;
   player_x = player_y = 1;
 }//end initialise
@@ -405,9 +413,41 @@ void checkPlayer()
       powerups.remove(i);
     }//end if
   }//end for
+  
+  if(player_death != -1)
+  {
+    fill(#AD9E1C);
+    rect((player_x + 0.1) * block, (player_y - 0.2) * block, block * 0.8, block * 0.1);
+    if((millis() - player_death) / 1000 >= 2)
+    {
+      player_death = -1;
+    }//end if
+  }//end if
 }//end checkPlayer
 
 void drawLevel()
+{
+  drawBlocks();
+  drawBombs();
+  drawPortal();
+  drawPowerups();
+  drawBricks();
+  drawEnemies();
+  if(millis() - player_button > 250)
+  {
+    button = true;
+    player_button = millis();
+  }//end if 
+  if(cooldown != -1)
+  {
+    if((millis() - cooldown) / 1000 >= 10)
+    {
+      cooldown = -1;
+    }//end if
+  }//end if
+}//end drawLevel
+
+void drawBlocks()
 {
   for(int i = 0; i < 15 ; i++)
   {
@@ -426,7 +466,10 @@ void drawLevel()
       popMatrix();
     }//end for
   }//end for
-  
+}//end drawBlocks
+
+void drawBombs()
+{
   for(int i = bombs.size() - 1; i >= 0; i--)
   {
     Bomb bm = bombs.get(i);
@@ -445,17 +488,10 @@ void drawLevel()
     }//end if
     popMatrix();
   }//for
-  
-  drawPortal();
-  for (int i = powerups.size() - 1; i >= 0; i--)
-  {
-    Pbomb p = powerups.get(i);
-    pushMatrix();
-    translate(p.x * block, p.y * block);
-    p.render();
-    popMatrix();
-  }//end for
-  
+}//end drawBombs
+
+void drawBricks()
+{
   for (int i = bricks.size() - 1; i >= 0; i--)
   {
     Brick b = bricks.get(i);
@@ -481,7 +517,10 @@ void drawLevel()
     }//end for
     popMatrix();
   }//end for
-  
+}//end void drawBricks
+
+void drawEnemies()
+{
   for (int i = enemies.size() - 1; i >= 0; i--)
   {
     Enemy e = enemies.get(i);
@@ -498,29 +537,55 @@ void drawLevel()
     {
       playerDeath();
     }//end if
-  }//end for
-  
-  if(millis() - player_button > 250)
-  {
-    button = true;
-    player_button = millis();
-  }//end if
-  
-  if(cooldown != -1)
-  {
-    if((millis() - cooldown) / 1000 >= 1)
+    if(enemy_death[i] != -1)
     {
-      cooldown = -1;
+      if(e.lives <= 0)
+      {
+        fill(#EEF702);
+        ellipseMode(CENTER);
+        ellipse((e.x * block) + block/2, (e.y * block) + block/2, block, block);
+        fill(#F79A02);
+        ellipse((e.x * block) + block/2, (e.y * block) + block/2, block/2, block/2);
+        fill(#F79A02);
+        ellipse((e.x * block) + block/2, (e.y * block) + block/2, block/4, block/4);
+        player_score += e.score;
+        enemies.remove(i);
+      }//end if
+      else
+      {
+        fill(#AD9E1C);
+        rect((e.x + 0.1) * block, (e.y - 0.2) * block, block * 0.8, block * 0.1);
+      }//end else
+      if((millis() - enemy_death[i]) / 1000 >= 2)
+      {
+        enemy_death[i] = -1;
+      }//end if
     }//end if
-  }//end if
-}//end drawLevel
+  }//end for
+}//end drawEnemies
+
+void drawPowerups()
+{
+  for (int i = powerups.size() - 1; i >= 0; i--)
+  {
+    Pbomb p = powerups.get(i);
+    pushMatrix();
+    translate(p.x * block, p.y * block);
+    p.render();
+    popMatrix();
+  }//end for
+}//end drawPowerups
 
 void playerDeath()
 {
-  player_lives--;
-  bomb_power = 2;
-  bomb_count = 1;
-  player_x = player_y = 1;
+  if(player_death == -1)
+  {
+    player_lives--;
+    bomb_power = 2;
+    bomb_count = 1;
+    player_x = player_y = 1;
+    player_death = millis();
+  }//end if
 }//end playerDeath
 
 void drawWall()
@@ -645,11 +710,10 @@ void explosion(int l, int k, int x, int y)
       if((e.x == (x + (l * i)) && e.y == (y + (k * i))) ||
       (e.x == x && e.y == y))
       {
-        e.lives--;
-        if(e.lives <= 0)
+        if(enemy_death[m] == -1)
         {
-          player_score += e.score;
-          enemies.remove(m);
+          e.lives--;
+          enemy_death[m] = millis();
         }//end if
       }//end if
     }//end for

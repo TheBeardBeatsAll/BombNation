@@ -20,6 +20,19 @@ class Kicker extends Player
             level[b.x + xdir][b.y + ydir] = false;
             b.x += xdir;
             b.y += ydir;
+            for (int m = enemies.size() - 1; m >= 0; m--)
+            {
+              Enemy e = enemies.get(m);
+              if(e.x == b.x && e.y == b.y)
+              {
+                if(enemy_death[m] == -1)
+                {
+                  e.lives--;
+                  enemy_death[m] = millis();
+                }//end if
+                return;
+              }//end if
+            }//end for
           }//end while
         }//end if
       }//end for
