@@ -10,7 +10,7 @@ upon recreating that as best I can.
 
 #Features
 The game has a Main Menu with 
--Start Game page
+- Start Game page
 -Instructions page
 -Exit page
 The game itself has three robot classes
